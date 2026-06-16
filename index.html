@@ -142,11 +142,11 @@
         /* 2. Tambah kelas baru untuk paksa video duduk diam kat belakang masa skrol */
         .body-video-bg {
             position: absolute; /* Melekat dalam skrin wrapper telefon */
-            top: 0;
-            left: 0;
+            top: 50%;
+            left: 50%;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Paksa video penuh satu skrin tanpa lari ratio aspect */
+            transform: translateX(-50%) translateY(-50%);
             pointer-events: none; /* Supaya jari user skrol tak tersangkut pada player video */
             z-index: 0;
             }
