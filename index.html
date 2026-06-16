@@ -14,6 +14,68 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
+
+        /* ==========================================================================
+           STYLE SKRIN COVER (WELCOME SCREEN FOR AUTOPLAY AUDIO)
+           ========================================================================== */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f9ebe6 0%, #f3d1c9 100%);
+            z-index: 9999; /* Sentiasa duduk paling atas sekali sebelum ditekan */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* Bila kad dibuka, kita slide kan skrin ni naik ke atas skrin phone */
+        .welcome-overlay.fade-out-page {
+            transform: translateY(-100%);
+        }
+
+        .welcome-content h1 {
+            font-family: 'Great Vibes', cursive, sans-serif;
+            font-size: 38pt;
+            color: var(--maroon-text);
+            margin: 15px 0;
+        }
+
+        .welcome-content h2 {
+            font-size: 14pt;
+            letter-spacing: 3px;
+            color: #8a6d65;
+            text-transform: uppercase;
+        }
+
+        .welcome-content p {
+            font-size: 10pt;
+            color: #666;
+            margin-bottom: 25px;
+            padding: 0 20px;
+        }
+
+        .btn-buka-kad {
+            background-color: var(--maroon-text);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 12pt;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(128, 51, 60, 0.3);
+            animation: pulseButton 1.5s infinite alternate;
+        }
+
+        @keyframes pulseButton {
+            from { transform: scale(1); }
+            to { transform: scale(1.06); }
+        }
+
         :root {
             --bg-cream: #f9ebe6; /* Warna latar belakang krim floral lembut kau */
             --maroon-text: #80333c; /* Warna tulisan merah manggis/maroon */
@@ -100,7 +162,7 @@
             box-shadow: 0 4px 15px rgba(128, 51, 60, 0.02);
             
             /* Default keadaan asal: Semua frame dikecutkan sikit dan pudar secara standard */
-            transform: scale(0.93);
+            transform: scale(0.85);
             opacity: 0.55;
             z-index: 1;
             
@@ -794,15 +856,17 @@
 
     <!-- SISTEM UTAMA LAGU LATAR -->
     <audio id="canva-bg-music" loop>
-        <source src="background-music.mp3" type="audio/mpeg">
+        <source src="ARVIAN DWI - SATU SHAF DI BELAKANGKU (LYRIC VIDEO) NOT OFFICIAL [ACEEIS_gCDc].mp3" type="audio/mpeg">
     </audio>
     <button id="music-floating-toggle" class="music-floating-toggle">🎵</button>
 
     <!-- ENGIN JAVASCRIPT LOGIC -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // 1. Mengaktifkan Library AOS Animasi
         AOS.init({ duration: 1000, once: true });
 
+        // 2. Fungsi Membuka & Menutup Halaman Panel Penuh (Navigation Bar)
         function displayFullPage(pageId) {
             document.getElementById(pageId).style.display = "flex";
         }
@@ -811,6 +875,7 @@
             document.getElementById(pageId).style.display = "none";
         }
 
+        // 3. Formula Khas Hitung Masa Countdown (DD:HH:MM:SS)
         const targetWeddingTimestamp = new Date("July 18, 2026 11:00:00").getTime();
 
         function runCanvaClock() {
@@ -838,49 +903,56 @@
         }
         setInterval(runCanvaClock, 1000);
 
+        // 4. LOGIK UTAMA: AUTOPLAY MP3 & FLOATING MUSIC TOGGLE BUTTON
         const musicTrack = document.getElementById("canva-bg-music");
         const musicControllerButton = document.getElementById("music-floating-toggle");
         let trackPlayingStatus = false;
 
-        window.addEventListener('click', () => {
-            if (!trackPlayingStatus) {
-                musicTrack.play().catch(err => console.log("Bypass block alert"));
+        // Fungsi pemicu bila tetamu tekan butang "Buka Kad" dekat skrin hadapan
+        function bukaKadUndangan() {
+            // Slaidkan welcome cover naik ke atas
+            document.getElementById("welcome-cover").classList.add("fade-out-page");
+            
+            // Paksa autoplay jalan secara sah (Bypass sekatan browser)
+            musicTrack.play().then(() => {
                 trackPlayingStatus = true;
-                musicControllerButton.innerText = "🎵";
-            }
-        }, { once: true });
+                if (musicControllerButton) musicControllerButton.innerText = "🎵";
+            }).catch(err => {
+                console.log("Browser block bypass error: ", err);
+            });
+        }
 
-        musicControllerButton.addEventListener('click', (event) => {
-            event.stopPropagation();
-            if (trackPlayingStatus) {
-                musicTrack.pause();
-                musicControllerButton.innerText = "🔇";
-            } else {
-                musicTrack.play();
-                musicControllerButton.innerText = "🎵";
-            }
-            trackPlayingStatus = !trackPlayingStatus;
-        });
+        // Fungsi kawalan butang floating di penjuru bawah kanan (On/Off Manual)
+        if (musicControllerButton) {
+            musicControllerButton.addEventListener('click', (event) => {
+                event.stopPropagation(); // Elak kacau elemen bertindih yang lain
+                if (trackPlayingStatus) {
+                    musicTrack.pause();
+                    musicControllerButton.innerText = "🔇";
+                } else {
+                    musicTrack.play();
+                    musicControllerButton.innerText = "🎵";
+                }
+                trackPlayingStatus = !trackPlayingStatus;
+            });
+        }
 
         /* ==========================================================================
-           ENGIN DETEKSI SKROL PHONE (Intersection Observer) - VERSION 2 (FIXED)
+           5. ENGIN DETEKSI SKROL PHONE (Intersection Observer) - BUBBLE SECTIONS
            ========================================================================= */
         const allFrames = document.querySelectorAll('.section-frame');
 
         const observerOptions = {
             root: null,
-            // Mengecilkan zon aktif supaya betul-betul frame kat tengah skrin je yang ON
-            rootMargin: "-35% 0px -35% 0px", 
+            rootMargin: "-35% 0px -35% 0px", /* Fokus zon skrol optimum tengah skrin phone */
             threshold: 0.1
         };
 
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Bila masuk tengah skrin, bagi dia membesar (bubble up)
                     entry.target.classList.add('active');
                 } else {
-                    // Bila skrol lepas ke atas ATAU ke bawah, wajib paksa dia mengecil balik!
                     entry.target.classList.remove('active');
                 }
             });
