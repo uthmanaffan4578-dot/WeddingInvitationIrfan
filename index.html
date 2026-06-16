@@ -601,7 +601,7 @@
                     <div class="couple-row-block">
                         <div class="profile-wooden-frame">
                             <!-- Link terus ke fail gambar_izzah.jpg -->
-                            <img src="gambar_izzah.jpeg" alt="Nurul Izzah">
+                            <img src="gambar_izzah.jpg" alt="Nurul Izzah">
                         </div>
                         <div class="couple-text-details">
                             NURUL IZZAH BINTI<br>MUHAMAD ZAHIR
@@ -612,7 +612,7 @@
                     <div class="couple-row-block reverse-direction" style="margin-bottom: 0;">
                         <div class="profile-wooden-frame">
                             <!-- Link terus ke fail gambar_omar.jpg -->
-                            <img src="gambar_omar.jpeg" alt="Omar Farouq">
+                            <img src="gambar_omar.jpg" alt="Omar Farouq">
                         </div>
                         <div class="couple-text-details">
                             OMAR FAROUQ BIN<br>RAHIM
@@ -825,27 +825,32 @@
         });
 
         /* ==========================================================================
-           ENGIN DETEKSI SKROL PHONE (Intersection Observer) - TAMBAH DI SINI
-           ========================================================================== */
+           ENGIN DETEKSI SKROL PHONE (Intersection Observer) - VERSION 2 (FIXED)
+           ========================================================================= */
         const allFrames = document.querySelectorAll('.section-frame');
 
         const observerOptions = {
             root: null,
-            rootMargin: "-30% 0px -30% 0px", /* Fokus tepat pada zon tengah skrin phone */
+            // Mengecilkan zon aktif supaya betul-betul frame kat tengah skrin je yang ON
+            rootMargin: "-35% 0px -35% 0px", 
             threshold: 0.1
         };
 
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
+                    // Bila masuk tengah skrin, bagi dia membesar (bubble up)
                     entry.target.classList.add('active');
                 } else {
+                    // Bila skrol lepas ke atas ATAU ke bawah, wajib paksa dia mengecil balik!
                     entry.target.classList.remove('active');
                 }
             });
         }, observerOptions);
 
-        allFrames.forEach(frame => scrollObserver.observe(frame));
+        allFrames.forEach(frame => {
+            scrollObserver.observe(frame);
+        });
     </script>
 </body>
 </html>
