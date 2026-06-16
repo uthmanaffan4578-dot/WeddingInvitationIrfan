@@ -90,7 +90,7 @@
         /* BUTANG WAX SEAL: Kedudukan diletakkan secara peratusan berdasarkan lipatan video */
         .btn-wax-seal-trigger {
             position: absolute;
-            bottom: 38%; /* Laraskan peratusan % ni naik/turun ikut garisan lipatan video envelope kau */
+            bottom: 30%; /* Laraskan peratusan % ni naik/turun ikut garisan lipatan video envelope kau */
             width: 85px;  /* Lebar saiz acuan bulatan butang */
             height: 85px;
             background: transparent;
@@ -188,7 +188,7 @@
         }
 
         /* ==========================================================================
-           PERBAIKAN SYSTEM FRAME (MATIKAN 3 LAYER BUG & FIX DROP DEPTH)
+           PERBAIKAN SYSTEM FRAME (BUANG TERUS EFEK SHADOW)
            ========================================================================== */
         .section-frame {
             margin: 25px auto;
@@ -196,6 +196,7 @@
             text-align: center;
             position: relative;
             
+            /* Kekalkan imej kad kau */
             background-image: url('Background.png');
             background-color: transparent;
             background-repeat: no-repeat;
@@ -203,27 +204,30 @@
             background-size: 100% 100%;
             border: none;
             
-            border-radius: 50px;
-            overflow: hidden;
-            clip-path: inset(0 round 24px); 
+            /* Bulatkan bucu kad dengan smooth */
+            border-radius: 35px;
+            overflow: hidden;   
             
+            /* Keadaan asal fasa skrol (Kecil & Pudar sikit) */
             transform: scale(0.8);
             opacity: 0.55;
-            filter: drop-shadow(0 4px 8px rgba(128, 51, 60, 0.08));
             
-            /* TUKAR KEPADA Z-INDEX LUAR: Supaya kad-kad ni terapung herlok atas video */
+            /* SHADOW DAH DIBUANG SEPENUHNYA KAT SINI */
+            box-shadow: none; 
             z-index: 2; 
             
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2), 
-                        filter 0.5s ease,
                         opacity 0.5s ease;
         }
 
+        /* KEADAAN AKTIF: Bila kad berada tepat di tengah skrin */
         .section-frame.active {
             transform: scale(1.04);
             opacity: 1;
-            filter: drop-shadow(0 15px 25px rgba(128, 51, 60, 0.22));
-            z-index: 5; /* Melonjak lagi tinggi ke atas paksi Z masa aktif */
+            
+            /* SHADOW DAH DIBUANG SEPENUHNYA KAT SINI */
+            box-shadow: none; 
+            z-index: 5; 
         }
         /* HERO INVITATION STYLE */
         .hero-section {
