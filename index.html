@@ -422,6 +422,25 @@
         /* ==========================================================================
            SISTEM ANIMASI POP-UP PANEL PENUH (BUBBLE POP EFFECT)
            ========================================================================== */
+        .fullpage-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(249, 235, 230, 0.95); /* Tukar jadi lutsinar sikit supaya nampak classy */
+            background-image: url('background-pattern.png');
+            background-size: cover;
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            overflow-y: auto;
+            
+            /* Animasi pudar untuk latar belakang overlay */
+            animation: fadeInOverlay 0.3s ease forwards;
+        }
+
+        /* Kotak Panel Utama Merah Jambu Lembut (Ditambah Animasi Bubble) */
         /* ==========================================================================
            FIXING POP-UP PANEL PENUH (Bagi Center Tegap & Animasi Mantap)
            ========================================================================== */
@@ -494,7 +513,7 @@
                 opacity: 1;
             }
         }
-
+        
         .dashboard-card-headline {
             font-size: 14px;
             text-transform: uppercase;
