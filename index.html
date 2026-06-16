@@ -101,39 +101,45 @@
        /* ==========================================================================
            1. HERO INVITATION STYLE (Fix Jarak & Fit Sakura)
            ========================================================================== */
+        /* ==========================================================================
+           1. HERO INVITATION STYLE (Picit Jarak Paksa Rapat Antara & dan Nama)
+           ========================================================================== */
         .hero-section {
             padding-top: 50px;
             padding-bottom: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Melekatkan elemen rapat dari atas */
+            text-align: center;
         }
 
-        .hero-names {
+        .hero-groom-name, .hero-bride-name {
             font-family: var(--font-serif);
             font-size: 42px;
             color: var(--maroon-text);
-            line-height: 1.1;
+            line-height: 1.0;
             font-weight: 400;
+            margin: 0;
+            padding: 0;
         }
 
+        /* Di sini kunci utama untuk merapatkan jarak antara & dengan Nurul Izzah */
         .hero-ampersand {
             font-family: var(--font-serif);
             font-style: italic;
             font-size: 32px;
             color: #333333;
-            margin: 5px 0;
             display: block;
-            line-height: 1;
+            line-height: 1.0;
+            
+            /* Sikitkan margin atas bawah. Kalau nak lagi rapat, kecilkan lagi nombor ni */
+            margin-top: 8px;     
+            margin-bottom: 8px;  
         }
 
-        /* Mengawal saiz bunga sakura supaya tak terlalu besar dalam telefon */
+        /* Mengawal kedudukan bunga sakura bawah Nurul Izzah */
         .center-flower-illustration {
             width: 100%;
-            max-width: 200px; /* Saiz ideal untuk ilustrasi sakura tengah */
+            max-width: 220px;
             height: auto;
-            margin: 15px auto; /* Mengecilkan margin atas bawah bunga */
+            margin: 25px auto 15px auto; /* Jarak sekata untuk bunga */
             display: block;
         }
 
@@ -545,10 +551,13 @@
         </nav>
 
         <!-- ================= 1. HERO HOME PAGE (Rujukan: Image 2) ================= -->
+        <!-- ================= 1. HERO HOME PAGE (Struktur Baharu Rapat) ================= -->
         <section class="hero-section" data-aos="fade-up" data-aos-duration="1000">
-            <h1 class="hero-names">Omar Farouq<br><span class="hero-ampersand">&</span><br>Nurul Izzah</h1>
+            <!-- Kita pecahkan bagi satu-satu tag supaya jarak boleh dikawal rapat -->
+            <div class="hero-groom-name">Omar Farouq</div>
+            <span class="hero-ampersand">&</span>
+            <div class="hero-bride-name">Nurul Izzah</div>
             
-            <!-- Tukar kod imej bunga tengah kepada sakura.png -->
             <img src="sakura.png" alt="Sakura Illustration" class="center-flower-illustration">
             
             <p class="title-walimatulurus">WALIMATULURUS</p>
