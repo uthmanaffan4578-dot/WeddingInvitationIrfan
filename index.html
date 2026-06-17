@@ -400,40 +400,50 @@
         }
 
         /* ==========================================================================
-           BINGKAI GAMBAR PENGANTIN (NGAM UNTUK ASSET IMAGE_A4524B.PNG)
+           BINGKAI GAMBAR PENGANTIN (FIX BUG: GAMBAR KAT BELAKANG FRAME BUNGA)
            ========================================================================== */
         .profile-wooden-frame {
-            width: 155px;  /* Saiz kotak dinaikkan sikit biar nampak jelas kat phone */
+            width: 155px;  
             height: 155px;
-            padding: 14px; /* Padding ni magik dia: Paksa gambar masuk ngam-ngam kat dalam garisan petak hitam */
             background-color: transparent;
-            
-            /* Panggil fail imej baru kau */
-            background-image: url('frame.png'); 
-            background-size: 100% 100%; /* Paksa frame bunga penuh satu kotak tanpa terpotong */
-            background-repeat: no-repeat;
-            background-position: center;
-            
+            position: relative; /* Wajib ada untuk kawalan paksi tindih */
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            overflow: visible; /* Biar daun bunga terkeluar sikit dari bounding box */
             transition: transform 0.3s ease;
+        }
+
+        /* TRIK MULTIMEDIA: Kita jadikan frame_bunga.png sebagai pseudo-element ::after */
+        /* Cara ni paksa frame duduk kat lapisan paling atas sekali (foreground) */
+        .profile-wooden-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('frame.png'); 
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2; /* LAPISAN ATAS: Membalut dan menindih bucu gambar */
+            pointer-events: none;
         }
 
         .profile-wooden-frame:hover {
             transform: scale(1.05);
         }
 
-        /* Setting khas gambar profil pengantin di dalam frame */
+        /* KOD GAMBAR PENGANTIN: Dah dikecilkan mengikut skala permintaan Omar */
         .profile-wooden-frame img {
-            width: 100%;
-            height: 100%;
+            width: 84%;  /* Dikecilkan dari 100% ke 84% supaya ngam masuk dalam garis hitam frame */
+            height: 84%; /* Dikecilkan dari 100% ke 84% */
             object-fit: cover;
-            /* Potong bucu gambar jadi petak lembut (radius 4px) supaya fit cun di dalam garisan hitam frame */
-            border-radius: 4px; 
-            z-index: 1;
+            border-radius: 12px; /* Melengkungkan bucu gambar biar sepadan dengan bucu frame */
+            z-index: 1;  /* LAPISAN BELAKANG: Duduk di bawah lubang lutsinar frame bunga */
+            position: relative;
         }
         .couple-text-details {
             padding: 0 15px;
