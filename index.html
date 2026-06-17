@@ -238,37 +238,44 @@
                         opacity 0.5s ease;
         }
 
-        /* 1. HIASAN BUNGA: Bucu Kiri Atas (::before) */
+        /* ==========================================================================
+           HIASAN BUNGA CORNER: PAKSA LAYER DUDUK PALING ATAS (FOREGROUND)
+           ========================================================================== */
+        /* 1. Bucu Kiri Atas (::before) */
         .section-frame::before {
             content: '';
             position: absolute;
-            top: -5px;
-            left: -5px;
-            width: 70px;  /* Saiz bunga comel sikit ja */
-            height: 70px;
+            top: -2px;   /* Ejas rapat sikit dengan bucu */
+            left: -2px;
+            width: 75px;  /* Saiz dinaikkan sikit biar impak nampak atas border */
+            height: 75px;
             background-image: url('flowercorner.png');
             background-size: contain;
             background-repeat: no-repeat;
-            z-index: 10;
+            
+            /* KUNCI UTAMA: Paksa layer duduk paling atas sekali menindih kad */
+            z-index: 10; 
+            
             pointer-events: none;
-            /* Pusingkan sikit angle bunga untuk fit ngam-ngam kat bucu kiri atas */
             transform: rotate(0deg); 
         }
 
-        /* 2. HIASAN BUNGA: Bucu Kanan Bawah (::after) */
+        /* 2. Bucu Kanan Bawah (::after) */
         .section-frame::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            right: -5px;
-            width: 70px;
-            height: 70px;
+            bottom: -2px;  /* Ejas rapat sikit dengan bucu */
+            right: -2px;
+            width: 75px;
+            height: 75px;
             background-image: url('flowercorner.png');
             background-size: contain;
             background-repeat: no-repeat;
-            z-index: 10;
+            
+            /* KUNCI UTAMA: Paksa layer duduk paling atas sekali menindih kad */
+            z-index: 10; 
+            
             pointer-events: none;
-            /* Terbalikkan & pusing bunga untuk fit cantik kat bucu kanan bawah */
             transform: scaleX(-1) rotate(180deg); 
         }
 
