@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Walimatulurus Nurul IzzahOmar Farouq & Omar Farouq</title>
+    <title>Walimatulurus Omar Farouq & Nurul Izzah</title>
     
     <!-- Google Fonts untuk klon gaya tulisan Canva kau -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
         }
 
         /* ==========================================================================
-           STYLE REKAAN ENVELOPE & INTERAKTIF WAX SEAL (Rujukan: Image eba529.jpg)
+           STYLE REKAAN ENVELOPE & INTERAKTIF WAX SEAL (Slaid Slow 2 Saat)
            ========================================================================== */
         .welcome-overlay {
             position: fixed;
@@ -56,7 +56,8 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            /* TUKAR KEPADA 2 SAAT: Memenuhi permintaan Omar untuk transisi slow-mo */
+            transition: transform 2.0s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         /* Mengangkat skrin sampul surat naik ke atas selepas animasi video 1 saat selesai */
@@ -88,11 +89,11 @@
             align-items: center;
         }
 
-        /* BUTANG WAX SEAL: Kedudukan diletakkan secara peratusan berdasarkan lipatan video */
+        /* BUTANG WAX SEAL: Ditambah ruang acuan untuk meletakkan teks melengkung SVG */
         .btn-wax-seal-trigger {
             position: absolute;
             bottom: 30%; 
-            width: 130px;  /* Dinaikkan saiz kotak pembungkus dari 85px ke 130px */
+            width: 130px;  
             height: 130px;
             background: transparent;
             border: none;
@@ -103,19 +104,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative; /* Penting untuk lapisan SVG melekat tepat */
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* GAYA KHUSUS IMEJ PNG WAX SEAL ASING KAU */
+        /* GAYA KHUSUS IMEJ PNG WAX SEAL */
         .wax-seal-img {
-            width: 100%;
-            height: 100%;
+            width: 85px;  
+            height: 85px;
             object-fit: contain;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)); 
             transition: transform 0.2s ease;
+            z-index: 2;
         }
 
+        /* SYSTEM TULISAN MELENGKUNG TAP HERE */
         .curved-text-svg {
             position: absolute;
             top: 0;
@@ -123,56 +125,54 @@
             width: 100%;
             height: 100%;
             z-index: 3;
-            pointer-events: none; /* Supaya tak mengacau fungsi klik butang */
+            pointer-events: none;
         }
 
         .curved-text-svg text {
-            font-family: var(--font-sans); /* Menggunakan font Montserrat kau */
-            font-size: 8.5px; /* Saiz huruf di dalam skala SVG 100x100 */
+            font-family: var(--font-sans);
+            font-size: 8.5px;
             font-weight: 500;
-            letter-spacing: 2.5px; /* Jarakkan huruf bagi sebiji macam Canva */
-            fill: #80333c; /* Warna maroon teks ikut tema */
+            letter-spacing: 2.5px;
+            fill: #80333c;
             text-transform: uppercase;
         }
 
         /* Efek klik mekanikal pada wax seal */
-        .btn-wax-seal-trigger:active .wax-seal-img {
-            transform: scale(0.9);
+        .btn-wax-seal-trigger:active .wax-seal-img,
+        .btn-wax-seal-trigger:active .curved-text-svg {
+            transform: scale(0.92);
         }
 
         @keyframes waxSealPulse {
             from { transform: scale(1); }
-            to { transform: scale(1.06); }
+            to { transform: scale(1.05); }
         }
 
         /* Pembungkus Utama (Sama saiz dengan resolusi telefon bimbit kau) */
         .main-wrapper {
             width: 100%;
             max-width: 450px;
-            background-color: var(--bg-cream); /* Kekalkan warna base jika video lambat load */
-            /* background-image: url('background-pattern.png'); */ /* <<< PADAM / COMMENT BARIS NI */
+            background-color: var(--bg-cream);
             min-height: 100vh;
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            padding: 0 15px 80px 15px;
+            padding: 25px 15px 80px 15px; /* Ditambah padding atas sikit */
         }
 
-        /* 2. Tambah kelas baru untuk paksa video duduk diam kat belakang masa skrol */
+        /* Paksa video duduk diam kat belakang masa skrol tanpa pepijat zoom */
         .body-video-bg {
-            position: fixed; /* TUKAR KE FIXED: Biar dia melekat kat skrin, bukan kat wrapper skrol */
+            position: fixed; 
             top: 0;
-            left: 50%; /* Letak di tengah paksi X monitor/skrin */
-            transform: translateX(-50%); /* Tarikh balik center mengikut saiz wrapper 450px kau */
+            left: 50%; 
+            transform: translateX(-50%); 
             width: 100%;
-            max-width: 450px; /* Ikut saiz maksimum wrapper telefon kau biar tak terkeluar ke PC */
-            height: 100vh; /* Kunci tinggi tepat ikut 100% skrin phone tetamu */
-            
-            object-fit: cover; /* Sekarang dia akan scale dengan herlok tanpa zoom hantu */
+            max-width: 450px; 
+            height: 100vh; 
+            object-fit: cover; 
             object-position: center; 
-            
             pointer-events: none; 
-            z-index: 0; /* Tetap duduk paling belakang sekali */
-            }
+            z-index: 0; 
+        }
 
         /* ==========================================================================
            STICKY BOTTOM NAVIGATION BAR (Gaya Premium App - Sentiasa Kat Bawah)
@@ -189,7 +189,7 @@
             padding: 14px 5px; 
             z-index: 1999; 
             box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15); 
-            margin-left: -15px; /* Selaras kedudukan dalam wrapper */
+            margin-left: -15px; 
         }
 
         .nav-button {
@@ -234,8 +234,6 @@
             /* Keadaan asal fasa skrol (Kecil & Pudar sikit) */
             transform: scale(0.8);
             opacity: 0.55;
-            
-            /* SHADOW DAH DIBUANG SEPENUHNYA KAT SINI */
             box-shadow: none; 
             z-index: 2; 
             
@@ -247,11 +245,10 @@
         .section-frame.active {
             transform: scale(1.04);
             opacity: 1;
-            
-            /* SHADOW DAH DIBUANG SEPENUHNYA KAT SINI */
             box-shadow: none; 
             z-index: 5; 
         }
+
         /* HERO INVITATION STYLE */
         .hero-section {
             padding-top: 40px;
@@ -259,12 +256,12 @@
         }
 
         .hero-groom-name, .hero-bride-name {
-            font-family: 'Playball', cursive; /* <<< Klon tebal Canva permintaan Omar */
-            font-size: 46px; /* Saiz optimum mengikut ketebalan font */
-            font-style: italic; /* Kasih senget lembut macam dalam Canva tu */
+            font-family: 'Playball', cursive; 
+            font-size: 46px; 
+            font-style: italic; 
             color: var(--maroon-text);
             line-height: 1.2;
-            font-weight: 400; /* Font ni memang dah tebal semula jadi */
+            font-weight: 400; 
             margin: 0;
             padding: 0;
         }
@@ -649,7 +646,7 @@
 
         .music-floating-toggle {
             position: fixed;
-            bottom: 85px; /* Dinaikkan ke atas sikit supaya tak bertindih dengan bottom-navbar baru */
+            bottom: 85px; 
             right: calc(50% - 200px);
             width: 45px;
             height: 45px;
@@ -675,29 +672,25 @@
 
     <!-- ================= WELCOME COVER SCREEN: AUTOMATIC VIDEO PLAY ================= -->
     <div id="welcome-cover" class="welcome-overlay">
-        <!-- Pastikan tiada perkataan 'loop' dekat sini tau bro -->
         <video id="envelope-video" class="envelope-video-bg" autoplay muted playsinline>
             <source src="envelope.mp4" type="video/mp4">
         </video>
 
         <!-- Container Konten Lutsinar -->
         <div class="welcome-content-container">
-            <!-- Butang Wax Seal Interaktif (Dah ditambah elemen tulisan melengkung SVG) -->
+            <!-- Butang Wax Seal Interaktif (Dah masuk teks melengkung SVG permintaan Omar) -->
             <button onclick="bukaSampulSurat()" class="btn-wax-seal-trigger" aria-label="Buka Kad">
-                <!-- Lapisan Imej Wax Seal Asal Kau -->
                 <img src="wax_seal.png" alt="Wax Seal Red" class="wax-seal-img">
                 
-                <!-- Lapisan SVG Tulisan Melengkung "TAP HERE" -->
                 <svg class="curved-text-svg" viewBox="0 0 100 100">
-                    <!-- Path lengkungan halimunan di bahagian bawah bulatan (Radius 38) -->
                     <path id="textPath" d="M 12,50 A 38,38 0 0,0 88,50" fill="transparent" />
                     <text>
-                        <!-- Linkkan teks dengan path halimunan di atas & letak di tengah (startOffset 50%) -->
                         <textPath href="#textPath" startOffset="50%" text-anchor="middle">TAP HERE</textPath>
                     </text>
                 </svg>
             </button>
         </div>
+    </div>
 
     <!-- MAIN WRAPPER UNIT -->
     <div class="main-wrapper">
@@ -831,7 +824,7 @@
             </section>
         </div>
 
-        <!-- STICKY BOTTOM NAVIGATION BAR (Dah Pindah Sini & Update Kelas) -->
+        <!-- STICKY BOTTOM NAVIGATION BAR -->
         <nav class="bottom-navbar">
             <button class="nav-button" onclick="displayFullPage('page-contact')">Hubungi</button>
             <button class="nav-button" onclick="displayFullPage('page-rsvp')">RSVP</button>
@@ -853,7 +846,6 @@
             <div class="pink-dashboard-card">
                 <div class="dashboard-card-headline">SILA KLIK NAMA DI BAWAH<br>UNTUK TERUS CHAT WHATSAPP:</div>
                 <div class="dashboard-contact-list">
-                    <!-- Semua nombor dah siap ditukar jadi link wa.me berserta kod negara 60 -->
                     <p><a href="https://wa.me/60195788832" target="_blank" style="color: white; text-decoration: none; display: block; padding: 5px 0;">💬 Zahir (019-5788832)</a></p>
                     <p><a href="https://wa.me/60194125774" target="_blank" style="color: white; text-decoration: none; display: block; padding: 5px 0;">💬 Harifah (019-4125774)</a></p>
                     <p><a href="https://wa.me/60174908583" target="_blank" style="color: white; text-decoration: none; display: block; padding: 5px 0;">💬 Izharshah (017-4908583)</a></p>
@@ -892,23 +884,6 @@
         </div>
     </div>
 
-    <!-- Halaman Penuh: LOKASI -->
-    <div id="page-location" class="fullpage-overlay">
-        <div class="fullpage-content-box">
-            <button class="back-circle-button" onclick="dismissFullPage('page-location')">&larr;</button>
-            <div class="pink-dashboard-card">
-                <div class="dashboard-card-headline" style="margin-bottom: 15px;">Tempat</div>
-                <p style="font-size: 12px; font-family: var(--font-sans); line-height: 1.5; padding: 0 10px;">
-                    DEWAN IMPIAN UNGGUL<br>LOT 2794 KAMPUNG BUKIT BELAH, TIKAM BATU,<br>08600 SUNGAI PETANI, KEDAH
-                </p>
-                <button class="dashboard-action-trigger" onclick="window.location.href='https://waze.com/your-link'">Scan Lokasi Majlis</button>
-                <div class="dashboard-qr-wrapper" style="width: 150px; height: 150px; margin-top: 10px;">
-                    <img src="waze-qr.png" alt="Waze Map QR">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- SISTEM UTAMA LAGU LATAR -->
     <audio id="canva-bg-music" loop>
         <source src="ARVIAN DWI - SATU SHAF DI BELAKANGKU (LYRIC VIDEO) NOT OFFICIAL [ACEEIS_gCDc].mp3" type="audio/mpeg">
@@ -918,12 +893,12 @@
     <!-- ENGIN JAVASCRIPT LOGIC -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-
+        // Paksa video background perlahan (0.5x kelajuan) sejak permulaan load skrin
         window.addEventListener('DOMContentLoaded', () => {
             const backgroundVideo = document.getElementById("html-bg-video");
             if (backgroundVideo) {
-                backgroundVideo.playbackRate = 1; // <<< Set 0.5 untuk 2x gila perlahan. Kalau nak laju sikit, letak 0.6 atau 0.7
-                console.log("Video background successfully set to slow-mo (0.5x speed) on load.");
+                backgroundVideo.playbackRate = 0.5; 
+                console.log("Video background successfully set to slow-mo on load.");
             }
         });
 
@@ -935,6 +910,7 @@
             document.getElementById(pageId).style.display = "flex";
         }
 
+        // Membetulkan ralat rupa bentuk panel popup
         function dismissFullPage(pageId) {
             document.getElementById(pageId).style.display = "none";
         }
@@ -967,18 +943,16 @@
         }
         setInterval(runCanvaClock, 1000);
 
-        // 4. LOGIK ENGIN UTAMA: PLAY SAMPAI HABIS (FREEZE FRAME AKHIR) & LOOP SELEPAS BUKA KAD
+        // 4. LOGIK ENGIN UTAMA: PLAY SAMPAI HABIS & FREEZE FRAME AKHIR
         const musicTrack = document.getElementById("canva-bg-music");
         const musicControllerButton = document.getElementById("music-floating-toggle");
         const envelopeVid = document.getElementById("envelope-video");
         let trackPlayingStatus = false;
 
-        // AUTOMATIC EVENT LOGIC: Kesan bila video dah habis main sampai frame terakhir
         if (envelopeVid) {
             envelopeVid.currentTime = 0; 
-            envelopeVid.loop = false; // Pastikan fasa pertama dia JANGAN loop dulu supaya boleh tamat
+            envelopeVid.loop = false; 
             
-            // Bila video tamat jalan, paksa dia freeze dekat frame paling akhir sekali
             envelopeVid.addEventListener('ended', () => {
                 envelopeVid.pause();
                 console.log("Video dah habis main sepunuhnya. Auto-freeze dekat frame terakhir.");
@@ -987,7 +961,6 @@
 
         // FUNGSI PICUAN: Bila tetamu picit butang Wax Seal Merah
         function bukaSampulSurat() {
-            // 1. Pasang musik lagu Arvian Dwi secara automatik (Bypass sekatan)
             if (musicTrack) {
                 musicTrack.play().then(() => {
                     trackPlayingStatus = true;
@@ -995,20 +968,18 @@
                 }).catch(err => console.log("Audio play blocked by browser: ", err));
             }
 
-            // 2. Trik Multimedia: Hidupkan balik video dan paksa dia LOOP tanpa henti untuk background
             if (envelopeVid) {
                 envelopeVid.loop = true;
                 envelopeVid.play();
             }
 
-            // 3. Tolak skrin welcome cover slaid naik ke atas dengan lancar
             const welcomeOverlay = document.getElementById("welcome-cover");
             if (welcomeOverlay) {
                 welcomeOverlay.classList.add("fade-out-page");
             }
         }
 
-        // Fungsi Butang Floating Toggle Musik Bawah Kanan (On/Off Manual)
+        // Fungsi Butang Floating Toggle Musik Manual
         if (musicControllerButton) {
             musicControllerButton.addEventListener('click', (event) => {
                 event.stopPropagation();
