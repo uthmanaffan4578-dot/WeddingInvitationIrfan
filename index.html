@@ -755,6 +755,60 @@
         @media (max-width: 450px) {
             .music-floating-toggle { right: 25px; }
         }
+
+        /* ==========================================================================
+           REKAAN SEKSYEN WISHES (LIVE RSVP GOOGLE SHEETS FEED)
+           ========================================================================== */
+        .wishes-container {
+            max-height: 320px; /* Hadkan tinggi supaya tak memanjang sampai kiamat */
+            overflow-y: auto;  /* Biar kotak ucapan ni boleh di-skrol dalam kad */
+            padding-right: 5px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        /* Rekaan bar skrol comel untuk phone */
+        .wishes-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .wishes-container::-webkit-scrollbar-thumb {
+            background: var(--btn-pink);
+            border-radius: 10px;
+        }
+
+        .single-wish-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-left: 3px solid var(--maroon-text);
+            padding: 12px 15px;
+            border-radius: 0 15px 15px 0;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .wish-text {
+            font-size: 12px;
+            font-style: italic;
+            line-height: 1.5;
+            color: #4a4a4a;
+            margin-bottom: 5px;
+        }
+
+        .wish-sender {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--maroon-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .no-wishes {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            padding: 20px 0;
+        }
+
     </style>
 </head>
 <body>
@@ -922,6 +976,19 @@
             <button class="nav-button" onclick="displayFullPage('page-gift')">Hadiah</button>
             <button class="nav-button" onclick="window.open('https://maps.app.goo.gl/RZmgrLkfWVX7uLAw7', '_blank')">Lokasi</button>
         </nav>
+
+        <!-- ================= FRAME 4.5: WISHES GUESTBOOK PAGE ================= -->
+        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
+            <section style="padding: 0; width: 100%;">
+                <h2 class="section-headline-serif" style="margin-bottom: 10px; font-size: 24px;">UCAPAN TETAMU</h2>
+                <p style="font-size: 11px; font-family: var(--font-sans); color: #666; margin-bottom: 15px;">Titipan doa dan ucapan daripada para tetamu jemputan:</p>
+                
+                <!-- Kotak takungan ucapan automatik -->
+                <div id="live-wishes-box" class="wishes-container">
+                    <p class="no-wishes">Sedang memuatkan ucapan indah...</p>
+                </div>
+            </section>
+        </div>
 
     </div><!-- End Main Wrapper -->
 
@@ -1143,6 +1210,65 @@
         allFrames.forEach(frame => {
             scrollObserver.observe(frame);
         });
+
+        // ==========================================================================
+        // ENJIN AUTOMATIK: TARIK DATA WISHES DARI GOOGLE SHEET CSV LIVE
+        // ==========================================================================
+        // !!! KAU GANTIKAN LINK BAWAH NI DENGAN LINK CSV GOOGLE SHEET KAU !!!
+        // ==========================================================================
+        // ENJIN BARU: KOD DAH DI-FIT DENGAN LAJUR GOOGLE SHEETS ASSET IMAGE_896E75.PNG
+        // ==========================================================================
+        
+        // 1. !!! TAMPAL LINK CSV KAU DEKAT BAWAH NI !!!
+        // Ambil dari File -> Share -> Publish to web -> Link -> CSV
+        const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRd0rj_Xf__GoHLC6UfxS29oMH6sCwWl0wilzDXjtd1qjjX1O3O6BBIHK67tAbKxnJDkBGajMC-BL6e/pub?output=csv"; 
+
+        async function fetchLiveWishes() {
+            try {
+                const response = await fetch(googleSheetCsvUrl);
+                const data = await response.text();
+                
+                const rows = data.split('\n').slice(1); // Potong baris header
+                const wishesBox = document.getElementById("live-wishes-box");
+                wishesBox.innerHTML = ""; // Buang tulisan loading
+                
+                let validWishesCount = 0;
+
+                rows.forEach(row => {
+                    // Trik pecahkan data CSV secara selamat jika tetamu ada letak koma dalam ucapan
+                    const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
+                    // KOD DAH DIPETAKAN IKUT LAJUR SEBENAR:
+                    const senderName = columns[1] ? columns[1].replace(/"/g, '').trim() : ""; // Lajur B (Nama Penuh)
+                    const guestWish = columns[5] ? columns[5].replace(/"/g, '').trim() : "";  // Lajur F (Ucapan & Doa) - FIX!
+
+                    // Paparkan ucapan yang ada isi sahaja
+                    if (senderName && guestWish && guestWish.length > 2) {
+                        validWishesCount++;
+                        const wishCard = document.createElement("div");
+                        wishCard.className = "single-wish-card";
+                        wishCard.innerHTML = `
+                            <p class="wish-text">"${guestWish}"</p>
+                            <p class="wish-sender">✍️ ${senderName}</p>
+                        `;
+                        // Ucapan terbaru masuk atas sekali (Latest first)
+                        wishesBox.insertBefore(wishCard, wishesBox.firstChild);
+                    }
+                });
+
+                if (validWishesCount === 0) {
+                    wishesBox.innerHTML = '<p class="no-wishes">Belum ada ucapan lagi. Jadilah yang pertama memberikan ucapan! ❤️</p>';
+                }
+
+            } catch (error) {
+                console.error("Ralat memuatkan ucapan: ", error);
+                document.getElementById("live-wishes-box").innerHTML = '<p class="no-wishes">Gagal memuatkan ucapan live. Cuba refresh semula.</p>';
+            }
+        }
+
+        // Jalankan enjin tarik data sepadan loading website
+        window.addEventListener('DOMContentLoaded', fetchLiveWishes);
+
     </script>
 </body>
 </html>
