@@ -1393,14 +1393,13 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         // Map status claimed secara global
         let giftStatusMap = {};
 
-        // 2. FUNGSI AMBIL DATA: Ditambah paksaan pembacaan String/Nombor yang fleksibel
+        // 2. FUNGSI AMBIL DATA: Baca status dari Google Sheets
         function fetchLiveGiftStatus() {
             fetch(giftDatabaseUrl)
                 .then(response => response.json())
                 .then(data => {
-                    giftStatusMap = {}; // Bersihkan map
+                    giftStatusMap = {}; 
                     data.forEach(item => {
-                        // KUNCI 1: Guna String(item.giftId) supaya tak kisah peranti hantar jenis data apa
                         giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
                     });
                     renderGiftGrid(); 
@@ -1411,7 +1410,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 });
         }
 
-        // 3. RENDER GRID DINAMIK: Diubah cara semakan status claimed
+        // 3. RENDER GRID DI DALAM POP-UP UTAMA
         function renderGiftGrid() {
             const gridContainer = document.getElementById("dynamic-gift-grid");
             if (!gridContainer) return;
@@ -1423,7 +1422,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 card.className = "giftlist-popup-card";
                 card.onclick = () => openGiftDetail(gift.id);
                 
-                // KUNCI 2: Semak map guna String ID barangan
                 let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
                 let claimedOverlayHtml = isClaimed ? `<div class="gift-claimed-overlay">CLAIMED</div>` : "";
                 
@@ -1439,18 +1437,57 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 5. ENJIN PUSH DATA: Paksa kemas kini paparan lokal serta-merta (Bypass sekatan no-cors)
+        // 4. BUKA SUB-MODAL DETAIL (MENGIDUPKAN SEMULA BUTANG CLAIM & LINK PENGANTIN KAU)
+        function openGiftDetail(id) {
+            const gift = irfanGiftsData.find(g => g.id === id);
+            if (!gift) return;
+            
+            // Masukkan gambar, nama, dan variasi ke sub-modal
+            document.getElementById("modal-gift-img").src = gift.image;
+            document.getElementById("modal-gift-name").innerText = gift.name;
+            document.getElementById("modal-gift-variant").innerText = gift.variant;
+            document.getElementById("modal-shop-link").href = gift.link;
+            
+            // Ejas teks platform kedai
+            document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
+            document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
+            
+            const claimBtn = document.getElementById("modal-claim-btn");
+            let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
+            
+            // Tukar rupa butang claim ikut status semasa
+            if(isClaimed) {
+                claimBtn.innerText = "❌ Cancel Claim";
+                claimBtn.className = "giftful-claim-trigger claimed-state";
+            } else {
+                claimBtn.innerText = "+ Claim";
+                claimBtn.className = "giftful-claim-trigger";
+            }
+            
+            // Masukkan fungsi klik unik ke butang claim
+            claimBtn.onclick = () => toggleClaimGift(gift.id, isClaimed ? "unclaim" : "claim");
+            
+            // Tampilkan sub-modal ke depan skrin
+            document.getElementById("gift-detail-modal").style.display = "flex";
+        }
+
+        // FUNGSI TUTUP SUB-MODAL
+        function closeGiftDetail() {
+            document.getElementById("gift-detail-modal").style.display = "none";
+        }
+
+        // 5. ENJIN PUSH DATA KANTOI: Kemas kini visual lokal terus baru hantar ke Sheets
         function toggleClaimGift(id, action) {
             const claimBtn = document.getElementById("modal-claim-btn");
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
-            // KUNCI 3: Kemas kini data lokal dulu secara agresif supaya user terus nampak impak visual!
+            // Update local state serta-merta biar user nampak claimed terus!
             giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
             renderGiftGrid();
             closeGiftDetail();
 
-            // Hantar data ke background pangkalan data Google Sheets
+            // Hantar data masuk Google Sheets secara background
             fetch(giftDatabaseUrl, {
                 method: "POST",
                 mode: "no-cors", 
@@ -1458,8 +1495,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 body: JSON.stringify({ giftId: id, action: action })
             })
             .then(() => {
-                console.log("Database updated successfully in background.");
-                // Tarik semula data fresh dari sheets untuk pastikan sync sempurna
+                console.log("Database updated in background.");
                 setTimeout(fetchLiveGiftStatus, 1500);
             })
             .catch(err => {
@@ -1467,7 +1503,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // Trigger fungsi muat turun status hadiah masa page mula-mula load
+        // Jalankan fungsi fetch bila start bukak website
         window.addEventListener('DOMContentLoaded', () => {
             fetchLiveGiftStatus();
         });
