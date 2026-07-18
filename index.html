@@ -1476,18 +1476,20 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById("gift-detail-modal").style.display = "none";
         }
 
-        // 5. ENJIN PUSH DATA KANTOI: Kemas kini visual lokal terus baru hantar ke Sheets
+        // 5. ENJIN PUSH DATA TERKINI: Kalis freeze dan sokong multi-action (Claim/Unclaim)
         function toggleClaimGift(id, action) {
             const claimBtn = document.getElementById("modal-claim-btn");
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
-            // Update local state serta-merta biar user nampak claimed terus!
+            // Ubat Penawar: Terus kemas kini status lokal secara agresif tanpa tunggu server
             giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
+            
+            // Refresh grid hadapan serta-merta dan tutup sub-modal
             renderGiftGrid();
             closeGiftDetail();
 
-            // Hantar data masuk Google Sheets secara background
+            // Hantar data ke Google Sheets di belakang tab
             fetch(giftDatabaseUrl, {
                 method: "POST",
                 mode: "no-cors", 
@@ -1495,12 +1497,23 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 body: JSON.stringify({ giftId: id, action: action })
             })
             .then(() => {
-                console.log("Database updated in background.");
-                setTimeout(fetchLiveGiftStatus, 1500);
+                console.log(`Berjaya laksanakan aksi: ${action} untuk ID: ${id}`);
             })
             .catch(err => {
-                console.error("Gagal sync ke awan:", err);
+                console.error("Gagal segerak data ke awan:", err);
             });
+            
+            // Lepas 2 saat, paksa tarik data fresh dari Sheets untuk pastikan sync global mantap
+            setTimeout(() => {
+                fetch(giftDatabaseUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(item => {
+                            giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
+                        });
+                        renderGiftGrid();
+                    });
+            }, 2000);
         }
 
         // Jalankan fungsi fetch bila start bukak website
