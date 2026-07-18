@@ -1379,60 +1379,52 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
 
-        // 1. DATA PUSAT HADIAH IRFAN (Kau boleh tukar link, nama, & gambar dekat sini)
+        // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
+        const giftDatabaseUrl = "TAMPAL_WEB_APP_URL_KAU_KAT_SINI";
+
+        // Data asas barangan Irfan
         let irfanGiftsData = [
-            {
-                id: 0,
-                name: "Cookware Set",
-                variant: "6pcs White Wood",
-                image: "hadiah_cookware.png",
-                store: "Shopee",
-                link: "https://s.shopee.com.my/rCZfWQQjkekTwSfu9",
-                claimed: false
-            },
-            {
-                id: 1,
-                name: "Mugs Premium",
-                variant: "Set of 6 Minimalist",
-                image: "hadiah_mugs.png",
-                store: "TikTok Shop",
-                link: "https://vt.tiktok.com/ZMrXxxxxx/",
-                claimed: false
-            },
-            {
-                id: 2,
-                name: "Cutlery Set Gold",
-                variant: "24 Pcs Stainless Steel",
-                image: "hadiah_cutlery.png",
-                store: "Shopee",
-                link: "https://s.shopee.com.my/example2",
-                claimed: false
-            },
-            {
-                id: 3,
-                name: "Dish Rack Black",
-                variant: "2-Tier Anti-Rust Space Saver",
-                image: "hadiah_dishrack.png",
-                store: "Art Deco Shop",
-                link: "https://www.artdeco.com.my",
-                claimed: false
-            }
+            { id: 0, name: "Cookware Set", variant: "6pcs White Wood", image: "hadiah_cookware.png", store: "Shopee", link: "https://s.shopee.com.my/rCZfWQQjkekTwSfu9" },
+            { id: 1, name: "Mugs Premium", variant: "Set of 6 Minimalist", image: "hadiah_mugs.png", store: "TikTok Shop", link: "https://vt.tiktok.com/ZMrXxxxxx/" },
+            { id: 2, name: "Cutlery Set Gold", variant: "24 Pcs Stainless Steel", image: "hadiah_cutlery.png", store: "Shopee", link: "https://s.shopee.com.my/example2" },
+            { id: 3, name: "Dish Rack Black", variant: "2-Tier Anti-Rust Space Saver", image: "hadiah_dishrack.png", store: "Art Deco Shop", link: "https://www.artdeco.com.my" }
         ];
 
-        // 2. FUNGSI UTAMA: JANA RUPA GRID HADIAH SECARA DINAMIK
+        // Map status claimed secara global
+        let giftStatusMap = {};
+
+        // 2. FUNGSI AMBIL DATA: Baca status terkini dari Google Sheets sebaik sahaja web dibuka
+        function fetchLiveGiftStatus() {
+            fetch(giftDatabaseUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Peta data status dari Sheets ke dalam map internal
+                    data.forEach(item => {
+                        giftStatusMap[item.giftId] = item.status;
+                    });
+                    renderGiftGrid(); // Render grid sebaik sahaja status live berjaya ditarik
+                })
+                .catch(err => {
+                    console.error("Gagal tarik status live hadiah:", err);
+                    renderGiftGrid(); // Backup tetap render grid walaupun offline
+                });
+        }
+
+        // 3. RENDER GRID DINAMIK
         function renderGiftGrid() {
             const gridContainer = document.getElementById("dynamic-gift-grid");
             if (!gridContainer) return;
             
-            gridContainer.innerHTML = ""; // Bersihkan kontainer asal
+            gridContainer.innerHTML = "";
             
             irfanGiftsData.forEach(gift => {
                 const card = document.createElement("div");
                 card.className = "giftlist-popup-card";
                 card.onclick = () => openGiftDetail(gift.id);
                 
-                // Jika status barangan sudah di-claim, suntik elemen overlay hitam 50%
-                let claimedOverlayHtml = gift.claimed ? `<div class="gift-claimed-overlay">CLAIMED</div>` : "";
+                // Semak status dalam map, kalau 'claimed' kita pasang topeng hitam 50%
+                let isClaimed = giftStatusMap[gift.id] === "claimed";
+                let claimedOverlayHtml = isClaimed ? `<div class="gift-claimed-overlay">CLAIMED</div>` : "";
                 
                 card.innerHTML = `
                     ${claimedOverlayHtml}
@@ -1446,7 +1438,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 3. FUNGSI BUKA SUB-MODAL DETAIL (STYLE GIFTFUL)
+        // 4. BUKA SUB-MODAL DETAIL
         function openGiftDetail(id) {
             const gift = irfanGiftsData.find(g => g.id === id);
             if (!gift) return;
@@ -1456,14 +1448,13 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById("modal-gift-variant").innerText = gift.variant;
             document.getElementById("modal-shop-link").href = gift.link;
             
-            // Set ikon dan text url kedai
             document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
             document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
             
             const claimBtn = document.getElementById("modal-claim-btn");
+            let isClaimed = giftStatusMap[gift.id] === "claimed";
             
-            // Ejas keadaan butang claim mengikut status data semasa
-            if(gift.claimed) {
+            if(isClaimed) {
                 claimBtn.innerText = "❌ Cancel Claim";
                 claimBtn.className = "giftful-claim-trigger claimed-state";
             } else {
@@ -1471,33 +1462,44 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 claimBtn.className = "giftful-claim-trigger";
             }
             
-            // Masukkan fungsi klik unik berdasarkan ID barang
-            claimBtn.onclick = () => toggleClaimGift(gift.id);
-            
+            claimBtn.onclick = () => toggleClaimGift(gift.id, isClaimed ? "unclaim" : "claim");
             document.getElementById("gift-detail-modal").style.display = "flex";
         }
 
-        // 4. FUNGSI TUTUP SUB-MODAL DETAIL
         function closeGiftDetail() {
             document.getElementById("gift-detail-modal").style.display = "none";
         }
 
-        // 5. ENJIN INTERAKTIF: TUKAR STATUS CLAIM (TOGGLE SYSTEM)
-        function toggleClaimGift(id) {
-            const gift = irfanGiftsData.find(g => g.id === id);
-            if (!gift) return;
-            
-            // Tukar status true/false
-            gift.claimed = !gift.claimed;
-            
-            // Refresh semula rupa grid hadapan dan tutup modal
-            renderGiftGrid();
-            closeGiftDetail();
+        // 5. ENJIN PUSH DATA: Hantar status claim baru ke Google Sheets database secara real-time
+        function toggleClaimGift(id, action) {
+            const claimBtn = document.getElementById("modal-claim-btn");
+            claimBtn.innerText = "Processing...";
+            claimBtn.disabled = true;
+
+            // Hantar data secara latar belakang ke Apps Script
+            fetch(giftDatabaseUrl, {
+                method: "POST",
+                mode: "no-cors", // Memotong sekatan CORS browser
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ giftId: id, action: action })
+            })
+            .then(() => {
+                // Kemas kini paparan lokal serta-marta selepas push berjaya
+                giftStatusMap[id] = (action === "claim") ? "claimed" : "available";
+                renderGiftGrid();
+                closeGiftDetail();
+            })
+            .catch(err => {
+                console.error("Gagal kemas kini pangkalan data:", err);
+                alert("Ralat sambungan rangkaian. Sila cuba lagi!");
+                renderGiftGrid();
+                closeGiftDetail();
+            });
         }
 
-        // Jalankan render grid sebaik sahaja DOM sedia diproses
+        // Jalankan tarik data automatik sebaik sahaja kad dibuka
         window.addEventListener('DOMContentLoaded', () => {
-            renderGiftGrid();
+            fetchLiveGiftStatus();
         });
 
         // Paksa video background perlahan (0.5x kelajuan) sejak permulaan load skrin
