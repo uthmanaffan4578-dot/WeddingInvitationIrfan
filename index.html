@@ -1380,7 +1380,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script>
 
         // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
-        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbyKUTFiWpBoI_PVoeRJqDZ9Rh7KhEo5nedsplEzVY6nsVahizVV52STD9OETTolYfs1/exec";
+        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbxbH_tHhoATMC_hZrnRi5AIxdM-LzldKEID4WNlsLHXYbClW1OXvy-rybs5fQiRM3rA/exec";
 
         // Data asas barangan Irfan
         let irfanGiftsData = [
@@ -1393,24 +1393,25 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         // Map status claimed secara global
         let giftStatusMap = {};
 
-        // 2. FUNGSI AMBIL DATA: Baca status terkini dari Google Sheets sebaik sahaja web dibuka
+        // 2. FUNGSI AMBIL DATA: Ditambah paksaan pembacaan String/Nombor yang fleksibel
         function fetchLiveGiftStatus() {
             fetch(giftDatabaseUrl)
                 .then(response => response.json())
                 .then(data => {
-                    // Peta data status dari Sheets ke dalam map internal
+                    giftStatusMap = {}; // Bersihkan map
                     data.forEach(item => {
-                        giftStatusMap[item.giftId] = item.status;
+                        // KUNCI 1: Guna String(item.giftId) supaya tak kisah peranti hantar jenis data apa
+                        giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
                     });
-                    renderGiftGrid(); // Render grid sebaik sahaja status live berjaya ditarik
+                    renderGiftGrid(); 
                 })
                 .catch(err => {
                     console.error("Gagal tarik status live hadiah:", err);
-                    renderGiftGrid(); // Backup tetap render grid walaupun offline
+                    renderGiftGrid(); 
                 });
         }
 
-        // 3. RENDER GRID DINAMIK
+        // 3. RENDER GRID DINAMIK: Diubah cara semakan status claimed
         function renderGiftGrid() {
             const gridContainer = document.getElementById("dynamic-gift-grid");
             if (!gridContainer) return;
@@ -1422,8 +1423,8 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 card.className = "giftlist-popup-card";
                 card.onclick = () => openGiftDetail(gift.id);
                 
-                // Semak status dalam map, kalau 'claimed' kita pasang topeng hitam 50%
-                let isClaimed = giftStatusMap[gift.id] === "claimed";
+                // KUNCI 2: Semak map guna String ID barangan
+                let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
                 let claimedOverlayHtml = isClaimed ? `<div class="gift-claimed-overlay">CLAIMED</div>` : "";
                 
                 card.innerHTML = `
@@ -1438,62 +1439,31 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 4. BUKA SUB-MODAL DETAIL
-        function openGiftDetail(id) {
-            const gift = irfanGiftsData.find(g => g.id === id);
-            if (!gift) return;
-            
-            document.getElementById("modal-gift-img").src = gift.image;
-            document.getElementById("modal-gift-name").innerText = gift.name;
-            document.getElementById("modal-gift-variant").innerText = gift.variant;
-            document.getElementById("modal-shop-link").href = gift.link;
-            
-            document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
-            document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
-            
-            const claimBtn = document.getElementById("modal-claim-btn");
-            let isClaimed = giftStatusMap[gift.id] === "claimed";
-            
-            if(isClaimed) {
-                claimBtn.innerText = "❌ Cancel Claim";
-                claimBtn.className = "giftful-claim-trigger claimed-state";
-            } else {
-                claimBtn.innerText = "+ Claim";
-                claimBtn.className = "giftful-claim-trigger";
-            }
-            
-            claimBtn.onclick = () => toggleClaimGift(gift.id, isClaimed ? "unclaim" : "claim");
-            document.getElementById("gift-detail-modal").style.display = "flex";
-        }
-
-        function closeGiftDetail() {
-            document.getElementById("gift-detail-modal").style.display = "none";
-        }
-
-        // 5. ENJIN PUSH DATA: Hantar status claim baru ke Google Sheets database secara real-time
+        // 5. ENJIN PUSH DATA: Paksa kemas kini paparan lokal serta-merta (Bypass sekatan no-cors)
         function toggleClaimGift(id, action) {
             const claimBtn = document.getElementById("modal-claim-btn");
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
-            // Hantar data secara latar belakang ke Apps Script
+            // KUNCI 3: Kemas kini data lokal dulu secara agresif supaya user terus nampak impak visual!
+            giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
+            renderGiftGrid();
+            closeGiftDetail();
+
+            // Hantar data ke background pangkalan data Google Sheets
             fetch(giftDatabaseUrl, {
                 method: "POST",
-                mode: "no-cors", // Memotong sekatan CORS browser
+                mode: "no-cors", 
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ giftId: id, action: action })
             })
             .then(() => {
-                // Kemas kini paparan lokal serta-marta selepas push berjaya
-                giftStatusMap[id] = (action === "claim") ? "claimed" : "available";
-                renderGiftGrid();
-                closeGiftDetail();
+                console.log("Database updated successfully in background.");
+                // Tarik semula data fresh dari sheets untuk pastikan sync sempurna
+                setTimeout(fetchLiveGiftStatus, 1500);
             })
             .catch(err => {
-                console.error("Gagal kemas kini pangkalan data:", err);
-                alert("Ralat sambungan rangkaian. Sila cuba lagi!");
-                renderGiftGrid();
-                closeGiftDetail();
+                console.error("Gagal sync ke awan:", err);
             });
         }
 
