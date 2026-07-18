@@ -843,6 +843,228 @@
             padding: 20px 0;
         }
 
+        /* ==========================================================================
+           REKAAN KHUSUS GRID HADIAH DI DALAM POP-UP OVERLAY
+           ========================================================================== */
+        .gift-overlay-scroll {
+            width: 100%;
+            max-height: 60vh; /* Hadkan tinggi supaya kotak grid boleh di-skrol dalam card pop-up */
+            overflow-y: auto;
+            padding-right: 5px;
+            margin-top: 15px;
+        }
+
+        /* Bar skrol comel dalam pop-up */
+        .gift-overlay-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .gift-overlay-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+
+        .giftlist-intro-box-popup {
+            background-color: rgba(0, 0, 0, 0.2); /* Gelap lutsinar sikit sebab kad induk dah pink */
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .giftlist-grid-popup {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            text-align: left;
+        }
+
+        .giftlist-popup-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .giftlist-popup-card img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            background-color: #f5f5f5;
+        }
+
+        .giftlist-popup-details {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .giftlist-popup-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333333;
+            line-height: 1.3;
+        }
+
+        .giftlist-popup-platform {
+            font-size: 10px;
+            color: #666666;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* ==========================================================================
+           CSS SISTEM GRID DYNAMIC & OVERLAY CLAIMED (OPACITY 50%)
+           ========================================================================== */
+        .giftlist-popup-card {
+            position: relative; /* Wajib untuk kedudukan absolute overlay */
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        /* Lapisan Hitam 50% jika hadiah sudah di-claim */
+        .gift-claimed-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Hitam dengan opacity 50% */
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            pointer-events: none; /* Biar user tak boleh klik kad yang dah claimed */
+        }
+
+        /* ==========================================================================
+           STYLE INTERFACE SUB-MODAL (KLON TEPAT STYLE GIFTFUL KAU)
+           ========================================================================== */
+        .giftful-submodal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2100; /* Duduk atas dari pink card */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .giftful-modal-content {
+            background: #222222; /* Kontras gelap premium */
+            color: white;
+            width: 100%;
+            max-width: 340px;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: bubbleInCard 0.3s ease forwards;
+        }
+
+        .giftful-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .giftful-img-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #ffffff;
+        }
+
+        .giftful-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .giftful-body {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .giftful-body h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: var(--font-sans);
+        }
+
+        .giftful-variant-box {
+            background: #333333;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .giftful-claim-trigger {
+            width: 100%;
+            background-color: #52b788; /* Hijau cerah mesra Giftful */
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 12px;
+            text-align: center;
+            display: block;
+        }
+        
+        .giftful-claim-trigger.claimed-state {
+            background-color: #e63946; /* Merah untuk batal claim */
+        }
+
+        .giftful-store-anchor {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background: #1a3a2a; /* Warna latar belakang hijau kedai gelap */
+            border: 1px solid #2d6a4f;
+            color: #52b788;
+            padding: 12px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
@@ -1038,6 +1260,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         <nav class="bottom-navbar">
             <button class="nav-button" onclick="displayFullPage('page-contact')">Hubungi</button>
             <button class="nav-button" onclick="displayFullPage('page-rsvp')">RSVP</button>
+            <button class="nav-button" onclick="displayFullPage('page-giftlist')">Hadiah</button>
             <button class="nav-button" onclick="window.open('https://maps.app.goo.gl/KpApyKnqbsFJVSf48?g_st=ac', '_blank')">Lokasi</button>
         </nav>
 
@@ -1093,6 +1316,59 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         </div>
     </div>
 
+    <!-- ==========================================================================
+        HALAMAN PENUH OVERLAY: WEDDING GIFT LIST (DYNAMIC WISH LIST)
+        ========================================================================== -->
+    <div id="page-giftlist" class="fullpage-overlay">
+        <div class="fullpage-content-box">
+            <button class="back-circle-button" onclick="dismissFullPage('page-giftlist')">&larr;</button>
+            
+            <div class="pink-dashboard-card" style="max-width: 400px; padding: 30px 15px; position: relative;">
+                <div class="dashboard-card-headline" style="margin-bottom: 5px; font-size: 18px;">Wedding Gift List</div>
+                
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="gambar_izzah.png" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                </div>
+
+                <div class="giftlist-intro-box-popup">
+                    We've put together a small gift list for your convenience. Please know that your presence is the greatest gift to us, and there is absolutely no obligation to purchase anything.
+                </div>
+
+                <!-- Kontainer skrol grid barangan yang akan dijana oleh JavaScript -->
+                <div class="gift-overlay-scroll">
+                    <div id="dynamic-gift-grid" class="giftlist-grid-popup">
+                        <!-- Data barang akan masuk di sini secara automatik -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH (STYLE GIFTFUL) -->
+        <div id="gift-detail-modal" class="giftful-submodal">
+            <div class="giftful-modal-content">
+                <button class="giftful-close-btn" onclick="closeGiftDetail()">&times;</button>
+                
+                <div class="giftful-img-container">
+                    <img id="modal-gift-img" src="" alt="Product Image">
+                </div>
+                
+                <div class="giftful-body">
+                    <h3 id="modal-gift-name">Product Name</h3>
+                    <div class="giftful-variant-box" id="modal-gift-variant">Variant</div>
+                    
+                    <!-- Butang Claim Interaktif -->
+                    <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim</button>
+                    
+                    <!-- Link Shopee/TikTok Shop -->
+                    <a id="modal-shop-link" href="#" target="_blank" class="giftful-store-anchor">
+                        <span id="modal-store-icon">🛍️</span> <span id="modal-store-url">s.shopee.com.my</span>
+                        <span style="margin-left: auto;">↗</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SISTEM UTAMA LAGU LATAR -->
     <audio id="canva-bg-music" loop>
         <source src="Cinta Luar Biasa.mp3" type="audio/mpeg">
@@ -1102,6 +1378,128 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <!-- ENGIN JAVASCRIPT LOGIC -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+
+        // 1. DATA PUSAT HADIAH IRFAN (Kau boleh tukar link, nama, & gambar dekat sini)
+        let irfanGiftsData = [
+            {
+                id: 0,
+                name: "Cookware Set",
+                variant: "6pcs White Wood",
+                image: "hadiah_cookware.png",
+                store: "Shopee",
+                link: "https://s.shopee.com.my/rCZfWQQjkekTwSfu9",
+                claimed: false
+            },
+            {
+                id: 1,
+                name: "Mugs Premium",
+                variant: "Set of 6 Minimalist",
+                image: "hadiah_mugs.png",
+                store: "TikTok Shop",
+                link: "https://vt.tiktok.com/ZMrXxxxxx/",
+                claimed: false
+            },
+            {
+                id: 2,
+                name: "Cutlery Set Gold",
+                variant: "24 Pcs Stainless Steel",
+                image: "hadiah_cutlery.png",
+                store: "Shopee",
+                link: "https://s.shopee.com.my/example2",
+                claimed: false
+            },
+            {
+                id: 3,
+                name: "Dish Rack Black",
+                variant: "2-Tier Anti-Rust Space Saver",
+                image: "hadiah_dishrack.png",
+                store: "Art Deco Shop",
+                link: "https://www.artdeco.com.my",
+                claimed: false
+            }
+        ];
+
+        // 2. FUNGSI UTAMA: JANA RUPA GRID HADIAH SECARA DINAMIK
+        function renderGiftGrid() {
+            const gridContainer = document.getElementById("dynamic-gift-grid");
+            if (!gridContainer) return;
+            
+            gridContainer.innerHTML = ""; // Bersihkan kontainer asal
+            
+            irfanGiftsData.forEach(gift => {
+                const card = document.createElement("div");
+                card.className = "giftlist-popup-card";
+                card.onclick = () => openGiftDetail(gift.id);
+                
+                // Jika status barangan sudah di-claim, suntik elemen overlay hitam 50%
+                let claimedOverlayHtml = gift.claimed ? `<div class="gift-claimed-overlay">CLAIMED</div>` : "";
+                
+                card.innerHTML = `
+                    ${claimedOverlayHtml}
+                    <img src="${gift.image}" alt="${gift.name}">
+                    <div class="giftlist-popup-details">
+                        <div class="giftlist-popup-name">${gift.name}</div>
+                        <div class="giftlist-popup-platform">🛍️ ${gift.store}</div>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // 3. FUNGSI BUKA SUB-MODAL DETAIL (STYLE GIFTFUL)
+        function openGiftDetail(id) {
+            const gift = irfanGiftsData.find(g => g.id === id);
+            if (!gift) return;
+            
+            document.getElementById("modal-gift-img").src = gift.image;
+            document.getElementById("modal-gift-name").innerText = gift.name;
+            document.getElementById("modal-gift-variant").innerText = gift.variant;
+            document.getElementById("modal-shop-link").href = gift.link;
+            
+            // Set ikon dan text url kedai
+            document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
+            document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
+            
+            const claimBtn = document.getElementById("modal-claim-btn");
+            
+            // Ejas keadaan butang claim mengikut status data semasa
+            if(gift.claimed) {
+                claimBtn.innerText = "❌ Cancel Claim";
+                claimBtn.className = "giftful-claim-trigger claimed-state";
+            } else {
+                claimBtn.innerText = "+ Claim";
+                claimBtn.className = "giftful-claim-trigger";
+            }
+            
+            // Masukkan fungsi klik unik berdasarkan ID barang
+            claimBtn.onclick = () => toggleClaimGift(gift.id);
+            
+            document.getElementById("gift-detail-modal").style.display = "flex";
+        }
+
+        // 4. FUNGSI TUTUP SUB-MODAL DETAIL
+        function closeGiftDetail() {
+            document.getElementById("gift-detail-modal").style.display = "none";
+        }
+
+        // 5. ENJIN INTERAKTIF: TUKAR STATUS CLAIM (TOGGLE SYSTEM)
+        function toggleClaimGift(id) {
+            const gift = irfanGiftsData.find(g => g.id === id);
+            if (!gift) return;
+            
+            // Tukar status true/false
+            gift.claimed = !gift.claimed;
+            
+            // Refresh semula rupa grid hadapan dan tutup modal
+            renderGiftGrid();
+            closeGiftDetail();
+        }
+
+        // Jalankan render grid sebaik sahaja DOM sedia diproses
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGiftGrid();
+        });
+
         // Paksa video background perlahan (0.5x kelajuan) sejak permulaan load skrin
         window.addEventListener('DOMContentLoaded', () => {
             const backgroundVideo = document.getElementById("html-bg-video");
