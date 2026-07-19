@@ -1446,38 +1446,122 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 4. BUKA SUB-MODAL DETAIL (MENGIDUPKAN SEMULA BUTANG CLAIM & LINK PENGANTIN KAU)
+        // 4. BUKA SUB-MODAL DETAIL DENGAN LOGIK INPUT NAMA
+        // 4. BUKA SUB-MODAL DETAIL DENGAN SEKATAN HAK PEMBATALAN (LOCALSTORAGE LOCK)
         function openGiftDetail(id) {
             const gift = irfanGiftsData.find(g => g.id === id);
             if (!gift) return;
             
-            // Masukkan gambar, nama, dan variasi ke sub-modal
             document.getElementById("modal-gift-img").src = gift.image;
             document.getElementById("modal-gift-name").innerText = gift.name;
             document.getElementById("modal-gift-variant").innerText = gift.variant;
             document.getElementById("modal-shop-link").href = gift.link;
             
-            // Ejas teks platform kedai
             document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
             document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
             
             const claimBtn = document.getElementById("modal-claim-btn");
+            const formBlock = document.getElementById("gift-claimer-form-block");
+            
+            document.getElementById("claimer-first-name").value = "";
+            document.getElementById("claimer-last-name").value = "";
+            
             let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
             
-            // Tukar rupa butang claim ikut status semasa
-            if(isClaimed) {
-                claimBtn.innerText = "❌ Cancel Claim";
-                claimBtn.className = "giftful-claim-trigger claimed-state";
+            // Semak sama ada peranti INI yang pernah claim barang ini sebelum ni
+            let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
+            let isMyOwnClaim = localClaimedGifts.includes(id);
+
+            claimBtn.disabled = false; // Reset state butang
+
+            if (isClaimed) {
+                formBlock.style.display = "none"; // Sembunyikan input form
+                
+                if (isMyOwnClaim) {
+                    // Hanya tunjuk butang cancel kalau dia sendiri yang claim sebelum ni
+                    claimBtn.innerText = "❌ Cancel Claim";
+                    claimBtn.className = "giftful-claim-trigger claimed-state";
+                    claimBtn.style.display = "block";
+                } else {
+                    // Kalau orang lain punya claim, terus sorok butang atau disabled-kan terus!
+                    claimBtn.innerText = "🔒 Claimed by Someone Else";
+                    claimBtn.className = "giftful-claim-trigger";
+                    claimBtn.style.backgroundColor = "#555555";
+                    claimBtn.disabled = true;
+                }
             } else {
-                claimBtn.innerText = "+ Claim";
+                // Barang masih kosong, sesiapa pun boleh claim
+                claimBtn.innerText = "+ Claim Hadiah";
                 claimBtn.className = "giftful-claim-trigger";
+                claimBtn.style.backgroundColor = "#52b788";
+                claimBtn.style.display = "block";
+                formBlock.style.display = "block";
             }
             
-            // Masukkan fungsi klik unik ke butang claim
             claimBtn.onclick = () => toggleClaimGift(gift.id, isClaimed ? "unclaim" : "claim");
-            
-            // Tampilkan sub-modal ke depan skrin
             document.getElementById("gift-detail-modal").style.display = "flex";
+        }
+
+        // 5. ENJIN PUSH DATA DENGAN SISTEM PENYIMPANAN TOKEN LOCALSTORAGE
+        function toggleClaimGift(id, action) {
+            let claimerFullName = "";
+            let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
+
+            if (action === "claim") {
+                const firstName = document.getElementById("claimer-first-name").value.trim();
+                const lastName = document.getElementById("claimer-last-name").value.trim();
+
+                if (!firstName || !lastName) {
+                    alert("⚠️ Sila isi kedua-dua Nama Pertama dan Nama Akhir anda sebelum claim!");
+                    return;
+                }
+                claimerFullName = firstName + " " + lastName;
+                
+                // Simpan ID hadiah ke dalam memori phone pembeli
+                if (!localClaimedGifts.includes(id)) {
+                    localClaimedGifts.push(id);
+                    localStorage.setItem("my_claimed_gifts", JSON.stringify(localClaimedGifts));
+                }
+            } else if (action === "unclaim") {
+                // Padam ID hadiah dari memori phone jika dia batalkan
+                localClaimedGifts = localClaimedGifts.filter(giftId => giftId !== id);
+                localStorage.setItem("my_claimed_gifts", JSON.stringify(localClaimedGifts));
+            }
+
+            const claimBtn = document.getElementById("modal-claim-btn");
+            claimBtn.innerText = "Processing...";
+            claimBtn.disabled = true;
+
+            // Update local state paparan skrin serta-merta
+            giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
+            renderGiftGrid();
+            closeGiftDetail();
+
+            // Tembak data masuk Google Sheets
+            fetch(giftDatabaseUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ giftId: id, action: action, name: claimerFullName })
+            })
+            .then(() => {
+                console.log(`Action ${action} success for ID: ${id}`);
+            })
+            .catch(err => {
+                console.error("Gagal sync ke server:", err);
+            });
+            
+            // Tarik data fresh selepas 2 saat untuk re-sync global status map
+            setTimeout(() => {
+                fetch(giftDatabaseUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(item => {
+                            giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
+                        });
+                        renderGiftGrid();
+                    });
+            }, 2000);
         }
 
         // FUNGSI TUTUP SUB-MODAL
