@@ -1389,7 +1389,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script>
 
         // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
-        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbz3-ZfFvOtN6qrVDOrH4zEq5T62I7_niNiAMTDD77HfseBtXJYSg-L8tgA2RDZ1tSVw/exec";
+        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbyQ5FIe7EfBAmHBCYcLA8GHZSC5Z2xpYO2mVytr2lWXwSy0GcZ9rGEcplzLUNlKrSqY/exec";
 
         // Data asas barangan Irfan
         let irfanGiftsData = [
@@ -1502,8 +1502,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById("gift-detail-modal").style.display = "flex";
         }
 
-        // 5. ENJIN PUSH DATA DENGAN SISTEM PENYIMPANAN TOKEN LOCALSTORAGE
-        // 5. ENJIN PUSH DATA KATA PUTUS: Guna URLSearchParams untuk pintas sekatan no-cors Google
+        // 5. ENJIN PUSH DATA KATA PUTUS (VERSI FORM DATA ASLI - KALIS BLACKOUT)
         function toggleClaimGift(id, action) {
             let claimerFullName = "";
 
@@ -1533,24 +1532,22 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
+            // Terus paksa skrin tukar warna hitam local state (Bypass delay server)
             giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
             renderGiftGrid();
             closeGiftDetail();
 
-            // 🚀 STRATEGI BARU: Tukar payload ke format URLSearchParams supaya Google boleh tangkap parameter nama
-            const postData = new URLSearchParams();
-            postData.append("giftId", id);
-            postData.append("action", action);
-            postData.append("name", claimerFullName);
+            // 🚀 STRATEGI FORM DATA: Google gila suka format ni, gerenti tangkap masuk Sheets!
+            const formData = new FormData();
+            formData.append("giftId", id);
+            formData.append("action", action);
+            formData.append("name", claimerFullName);
 
-            // Hantar data ke awan Sheets
+            // Tembak data masuk awan Sheets
             fetch(giftDatabaseUrl, {
                 method: "POST",
                 mode: "no-cors", 
-                body: postData.toString(), // Hantar sebagai string URL query
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                }
+                body: formData
             })
             .then(() => {
                 console.log(`Berjaya segerak aksi ${action} untuk ID: ${id}`);
@@ -1559,10 +1556,12 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 console.error("Gagal sync ke server:", err);
             });
             
+            // Tunggu 2 saat bagi sheets bertenang, baru tarik data live fresh
             setTimeout(() => {
                 fetch(giftDatabaseUrl)
                     .then(response => response.json())
                     .then(data => {
+                        giftStatusMap = {}; // Reset map
                         data.forEach(item => {
                             giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
                         });
