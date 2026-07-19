@@ -1389,7 +1389,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script>
 
         // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
-        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbyO3bjjcsaKMKI_O3AIxi6L5CL_J70jtBE6lQ-mSfprJEI3WkXXkyCX5Ha0Wu2JKCFd/exec";
+        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbz3-ZfFvOtN6qrVDOrH4zEq5T62I7_niNiAMTDD77HfseBtXJYSg-L8tgA2RDZ1tSVw/exec";
 
         // Data asas barangan Irfan
         let irfanGiftsData = [
@@ -1503,9 +1503,9 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         }
 
         // 5. ENJIN PUSH DATA DENGAN SISTEM PENYIMPANAN TOKEN LOCALSTORAGE
+        // 5. ENJIN PUSH DATA KATA PUTUS: Guna URLSearchParams untuk pintas sekatan no-cors Google
         function toggleClaimGift(id, action) {
             let claimerFullName = "";
-            let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
 
             if (action === "claim") {
                 const firstName = document.getElementById("claimer-first-name").value.trim();
@@ -1515,15 +1515,16 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     alert("⚠️ Sila isi kedua-dua Nama Pertama dan Nama Akhir anda sebelum claim!");
                     return;
                 }
+                // Menggabungkan dua ruangan input nama dengan selamat
                 claimerFullName = firstName + " " + lastName;
                 
-                // Simpan ID hadiah ke dalam memori phone pembeli
+                let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
                 if (!localClaimedGifts.includes(id)) {
                     localClaimedGifts.push(id);
                     localStorage.setItem("my_claimed_gifts", JSON.stringify(localClaimedGifts));
                 }
             } else if (action === "unclaim") {
-                // Padam ID hadiah dari memori phone jika dia batalkan
+                let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
                 localClaimedGifts = localClaimedGifts.filter(giftId => giftId !== id);
                 localStorage.setItem("my_claimed_gifts", JSON.stringify(localClaimedGifts));
             }
@@ -1532,26 +1533,32 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
-            // Update local state paparan skrin serta-merta
             giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
             renderGiftGrid();
             closeGiftDetail();
 
-            // Tembak data masuk Google Sheets
+            // 🚀 STRATEGI BARU: Tukar payload ke format URLSearchParams supaya Google boleh tangkap parameter nama
+            const postData = new URLSearchParams();
+            postData.append("giftId", id);
+            postData.append("action", action);
+            postData.append("name", claimerFullName);
+
+            // Hantar data ke awan Sheets
             fetch(giftDatabaseUrl, {
                 method: "POST",
                 mode: "no-cors", 
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ giftId: id, action: action, name: claimerFullName })
+                body: postData.toString(), // Hantar sebagai string URL query
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
             })
             .then(() => {
-                console.log(`Action ${action} success for ID: ${id}`);
+                console.log(`Berjaya segerak aksi ${action} untuk ID: ${id}`);
             })
             .catch(err => {
                 console.error("Gagal sync ke server:", err);
             });
             
-            // Tarik data fresh selepas 2 saat untuk re-sync global status map
             setTimeout(() => {
                 fetch(giftDatabaseUrl)
                     .then(response => response.json())
