@@ -1343,7 +1343,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             </div>
         </div>
 
-        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH (STYLE GIFTFUL) -->
+        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH DENGAN BORANG INPUT NAMA -->
         <div id="gift-detail-modal" class="giftful-submodal">
             <div class="giftful-modal-content">
                 <button class="giftful-close-btn" onclick="closeGiftDetail()">&times;</button>
@@ -1356,8 +1356,17 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     <h3 id="modal-gift-name">Product Name</h3>
                     <div class="giftful-variant-box" id="modal-gift-variant">Variant</div>
                     
+                    <!-- 📝 KOTAK FORM INPUT NAMA (Hanya muncul jika barang belum di-claim) -->
+                    <div id="gift-claimer-form-block" style="margin-bottom: 15px;">
+                        <p style="font-size: 11px; color: #aaa; margin-bottom: 5px; font-family: var(--font-sans);">Sila isi nama anda sebelum claim:</p>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="claimer-first-name" placeholder="Nama Pertama" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; font-size: 12px; font-family: var(--font-sans); outline: none;">
+                            <input type="text" id="claimer-last-name" placeholder="Nama Akhir" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; font-size: 12px; font-family: var(--font-sans); outline: none;">
+                        </div>
+                    </div>
+
                     <!-- Butang Claim Interaktif -->
-                    <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim</button>
+                    <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim Hadiah</button>
                     
                     <!-- Link Shopee/TikTok Shop -->
                     <a id="modal-shop-link" href="#" target="_blank" class="giftful-store-anchor">
@@ -1367,8 +1376,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 </div>
             </div>
         </div>
-    </div>
-
     <!-- SISTEM UTAMA LAGU LATAR -->
     <audio id="canva-bg-music" loop>
         <source src="Cinta Luar Biasa.mp3" type="audio/mpeg">
@@ -1380,7 +1387,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script>
 
         // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
-        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbxbH_tHhoATMC_hZrnRi5AIxdM-LzldKEID4WNlsLHXYbClW1OXvy-rybs5fQiRM3rA/exec";
+        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbyZEyGPb_DR4MlOK7IOOvcaRbgYzng4NZlaiuAycXqzcJ4ro7vczMzbzEQxTKqnKmpN/exec";
 
         // Data asas barangan Irfan
         let irfanGiftsData = [
@@ -1437,38 +1444,92 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 4. BUKA SUB-MODAL DETAIL (MENGIDUPKAN SEMULA BUTANG CLAIM & LINK PENGANTIN KAU)
+        // 4. BUKA SUB-MODAL DETAIL DENGAN LOGIK INPUT NAMA
         function openGiftDetail(id) {
             const gift = irfanGiftsData.find(g => g.id === id);
             if (!gift) return;
             
-            // Masukkan gambar, nama, dan variasi ke sub-modal
             document.getElementById("modal-gift-img").src = gift.image;
             document.getElementById("modal-gift-name").innerText = gift.name;
             document.getElementById("modal-gift-variant").innerText = gift.variant;
             document.getElementById("modal-shop-link").href = gift.link;
             
-            // Ejas teks platform kedai
             document.getElementById("modal-store-icon").innerText = gift.store === "Shopee" ? "🛍️" : "🎵";
             document.getElementById("modal-store-url").innerText = gift.link.replace('https://', '').substring(0, 22) + "...";
             
             const claimBtn = document.getElementById("modal-claim-btn");
+            const formBlock = document.getElementById("gift-claimer-form-block");
+            
+            // Bersihkan kotak input nama setiap kali modal dibuka
+            document.getElementById("claimer-first-name").value = "";
+            document.getElementById("claimer-last-name").value = "";
+            
             let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
             
-            // Tukar rupa butang claim ikut status semasa
             if(isClaimed) {
                 claimBtn.innerText = "❌ Cancel Claim";
                 claimBtn.className = "giftful-claim-trigger claimed-state";
+                formBlock.style.display = "none"; // Sembunyikan input form kalau barang dah claimed
             } else {
-                claimBtn.innerText = "+ Claim";
+                claimBtn.innerText = "+ Claim Hadiah";
                 claimBtn.className = "giftful-claim-trigger";
+                formBlock.style.display = "block"; // Tunjukkan form kalau barang available
             }
             
-            // Masukkan fungsi klik unik ke butang claim
             claimBtn.onclick = () => toggleClaimGift(gift.id, isClaimed ? "unclaim" : "claim");
-            
-            // Tampilkan sub-modal ke depan skrin
             document.getElementById("gift-detail-modal").style.display = "flex";
+        }
+
+        // 5. ENJIN PUSH DATA BERSAMA DATA NAMA PEMBELI
+        function toggleClaimGift(id, action) {
+            let claimerFullName = "";
+
+            // Jika user nak CLAIM, wajib semak input nama dulu
+            if (action === "claim") {
+                const firstName = document.getElementById("claimer-first-name").value.trim();
+                const lastName = document.getElementById("claimer-last-name").value.trim();
+
+                if (!firstName || !lastName) {
+                    alert("⚠️ Sila isi kedua-dua Nama Pertama dan Nama Akhir anda sebelum claim!");
+                    return; // Sekat daripada proceed kalau nama kosong
+                }
+                claimerFullName = firstName + " " + lastName;
+            }
+
+            const claimBtn = document.getElementById("modal-claim-btn");
+            claimBtn.innerText = "Processing...";
+            claimBtn.disabled = true;
+
+            // Kemas kini paparan lokal dengan pantas
+            giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
+            renderGiftGrid();
+            closeGiftDetail();
+
+            // Hantar data (termasuk nama pembeli) ke Google Sheets database
+            fetch(giftDatabaseUrl, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ giftId: id, action: action, name: claimerFullName })
+            })
+            .then(() => {
+                console.log(`Berjaya laksanakan aksi: ${action} untuk ID: ${id}`);
+            })
+            .catch(err => {
+                console.error("Gagal sync ke awan:", err);
+            });
+            
+            // Tunggu 2 saat baru tarik data terkini dari Sheets untuk pengesahan sync
+            setTimeout(() => {
+                fetch(giftDatabaseUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(item => {
+                            giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
+                        });
+                        renderGiftGrid();
+                    });
+            }, 2000);
         }
 
         // FUNGSI TUTUP SUB-MODAL
