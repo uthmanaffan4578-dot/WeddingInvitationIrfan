@@ -1343,7 +1343,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             </div>
         </div>
 
-        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH (STYLE GIFTFUL) -->
+        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH DENGAN BORANG INPUT NAMA -->
         <div id="gift-detail-modal" class="giftful-submodal">
             <div class="giftful-modal-content">
                 <button class="giftful-close-btn" onclick="closeGiftDetail()">&times;</button>
@@ -1356,8 +1356,17 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     <h3 id="modal-gift-name">Product Name</h3>
                     <div class="giftful-variant-box" id="modal-gift-variant">Variant</div>
                     
+                    <!-- 📝 KOTAK FORM INPUT NAMA (Hanya muncul jika barang belum di-claim) -->
+                    <div id="gift-claimer-form-block" style="margin-bottom: 15px;">
+                        <p style="font-size: 11px; color: #aaa; margin-bottom: 5px; font-family: var(--font-sans);">Sila isi nama anda sebelum claim:</p>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="claimer-first-name" placeholder="Nama Pertama" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; font-size: 12px; font-family: var(--font-sans); outline: none;">
+                            <input type="text" id="claimer-last-name" placeholder="Nama Akhir" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #333; color: white; font-size: 12px; font-family: var(--font-sans); outline: none;">
+                        </div>
+                    </div>
+
                     <!-- Butang Claim Interaktif -->
-                    <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim</button>
+                    <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim Hadiah</button>
                     
                     <!-- Link Shopee/TikTok Shop -->
                     <a id="modal-shop-link" href="#" target="_blank" class="giftful-store-anchor">
@@ -1367,7 +1376,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- SISTEM UTAMA LAGU LATAR -->
     <audio id="canva-bg-music" loop>
