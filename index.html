@@ -1389,7 +1389,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
     <script>
 
         // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
-        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbyQ5FIe7EfBAmHBCYcLA8GHZSC5Z2xpYO2mVytr2lWXwSy0GcZ9rGEcplzLUNlKrSqY/exec";
+        const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbwmuEia-_UHbJVTcvTozYRlVZWDueAvnB4VOr01lP0EciJsJbZUJizJo9W1IoMMWw/exec";
 
         // Data asas barangan Irfan
         let irfanGiftsData = [
@@ -1446,7 +1446,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 4. BUKA SUB-MODAL DETAIL DENGAN LOGIK INPUT NAMA
         // 4. BUKA SUB-MODAL DETAIL DENGAN SEKATAN HAK PEMBATALAN (LOCALSTORAGE LOCK)
         function openGiftDetail(id) {
             const gift = irfanGiftsData.find(g => g.id === id);
@@ -1468,29 +1467,26 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             
             let isClaimed = giftStatusMap[String(gift.id)] === "claimed";
             
-            // Semak sama ada peranti INI yang pernah claim barang ini sebelum ni
             let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
             let isMyOwnClaim = localClaimedGifts.includes(id);
 
-            claimBtn.disabled = false; // Reset state butang
+            claimBtn.disabled = false;
 
             if (isClaimed) {
-                formBlock.style.display = "none"; // Sembunyikan input form
+                formBlock.style.display = "none";
                 
                 if (isMyOwnClaim) {
-                    // Hanya tunjuk butang cancel kalau dia sendiri yang claim sebelum ni
                     claimBtn.innerText = "❌ Cancel Claim";
                     claimBtn.className = "giftful-claim-trigger claimed-state";
                     claimBtn.style.display = "block";
+                    claimBtn.style.backgroundColor = "#e63946";
                 } else {
-                    // Kalau orang lain punya claim, terus sorok butang atau disabled-kan terus!
                     claimBtn.innerText = "🔒 Claimed by Someone Else";
                     claimBtn.className = "giftful-claim-trigger";
                     claimBtn.style.backgroundColor = "#555555";
                     claimBtn.disabled = true;
                 }
             } else {
-                // Barang masih kosong, sesiapa pun boleh claim
                 claimBtn.innerText = "+ Claim Hadiah";
                 claimBtn.className = "giftful-claim-trigger";
                 claimBtn.style.backgroundColor = "#52b788";
@@ -1502,7 +1498,12 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById("gift-detail-modal").style.display = "flex";
         }
 
-        // 5. ENJIN PUSH DATA KATA PUTUS (VERSI FORM DATA ASLI - KALIS BLACKOUT)
+        // FUNGSI TUTUP SUB-MODAL
+        function closeGiftDetail() {
+            document.getElementById("gift-detail-modal").style.display = "none";
+        }
+
+        // 5. ENJIN PUSH DATA FORM DATA (BERSIH & KALIS FREEZE)
         function toggleClaimGift(id, action) {
             let claimerFullName = "";
 
@@ -1514,7 +1515,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     alert("⚠️ Sila isi kedua-dua Nama Pertama dan Nama Akhir anda sebelum claim!");
                     return;
                 }
-                // Menggabungkan dua ruangan input nama dengan selamat
                 claimerFullName = firstName + " " + lastName;
                 
                 let localClaimedGifts = JSON.parse(localStorage.getItem("my_claimed_gifts") || "[]");
@@ -1532,21 +1532,18 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             claimBtn.innerText = "Processing...";
             claimBtn.disabled = true;
 
-            // Terus paksa skrin tukar warna hitam local state (Bypass delay server)
             giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
             renderGiftGrid();
             closeGiftDetail();
 
-            // 🚀 STRATEGI FORM DATA: Google gila suka format ni, gerenti tangkap masuk Sheets!
             const formData = new FormData();
             formData.append("giftId", id);
             formData.append("action", action);
             formData.append("name", claimerFullName);
 
-            // Tembak data masuk awan Sheets
             fetch(giftDatabaseUrl, {
                 method: "POST",
-                mode: "no-cors", 
+                mode: "no-cors",  
                 body: formData
             })
             .then(() => {
@@ -1556,12 +1553,11 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 console.error("Gagal sync ke server:", err);
             });
             
-            // Tunggu 2 saat bagi sheets bertenang, baru tarik data live fresh
             setTimeout(() => {
                 fetch(giftDatabaseUrl)
                     .then(response => response.json())
                     .then(data => {
-                        giftStatusMap = {}; // Reset map
+                        giftStatusMap = {}; 
                         data.forEach(item => {
                             giftStatusMap[String(item.giftId).trim()] = String(item.status).trim();
                         });
@@ -1570,66 +1566,30 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             }, 2000);
         }
 
-        // FUNGSI TUTUP SUB-MODAL
-        function closeGiftDetail() {
-            document.getElementById("gift-detail-modal").style.display = "none";
-        }
-
-        // 5. ENJIN PUSH DATA KANTOI: Kemas kini visual lokal terus baru hantar ke Sheets
-        function toggleClaimGift(id, action) {
-            const claimBtn = document.getElementById("modal-claim-btn");
-            claimBtn.innerText = "Processing...";
-            claimBtn.disabled = true;
-
-            // Update local state serta-merta biar user nampak claimed terus!
-            giftStatusMap[String(id)] = (action === "claim") ? "claimed" : "available";
-            renderGiftGrid();
-            closeGiftDetail();
-
-            // Hantar data masuk Google Sheets secara background
-            fetch(giftDatabaseUrl, {
-                method: "POST",
-                mode: "no-cors", 
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ giftId: id, action: action })
-            })
-            .then(() => {
-                console.log("Database updated in background.");
-                setTimeout(fetchLiveGiftStatus, 1500);
-            })
-            .catch(err => {
-                console.error("Gagal sync ke awan:", err);
-            });
-        }
-
-        // Jalankan fungsi fetch bila start bukak website
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchLiveGiftStatus();
-        });
-
-        // Paksa video background perlahan (0.5x kelajuan) sejak permulaan load skrin
+        // Paksa video background perlahan
         window.addEventListener('DOMContentLoaded', () => {
             const backgroundVideo = document.getElementById("html-bg-video");
             if (backgroundVideo) {
                 backgroundVideo.playbackRate = 0.7; 
-                console.log("Video background successfully set to slow-mo on load.");
             }
         });
 
         // 1. Mengaktifkan Library AOS Animasi
         AOS.init({ duration: 1000, once: true });
 
-        // 2. Fungsi Membuka & Menutup Halaman Panel Penuh (Navigation Bar)
+        // 2. Fungsi Membuka & Menutup Halaman Panel Penuh
         function displayFullPage(pageId) {
             document.getElementById(pageId).style.display = "flex";
+            if(pageId === 'page-giftlist') {
+                fetchLiveGiftStatus(); // Paksa sync data teranyar bila panel hadiah dibuka
+            }
         }
 
-        // Membetulkan ralat rupa bentuk panel popup
         function dismissFullPage(pageId) {
             document.getElementById(pageId).style.display = "none";
         }
 
-        // 3. Formula Khas Hitung Masa Countdown (DD:HH:MM:SS)
+        // 3. Formula Khas Hitung Masa Countdown
         const targetWeddingTimestamp = new Date("August 30, 2026 11:00:00").getTime();
 
         function runCanvaClock() {
@@ -1657,7 +1617,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         }
         setInterval(runCanvaClock, 1000);
 
-        // 4. LOGIK ENGIN UTAMA: PLAY SAMPAI HABIS & FREEZE FRAME AKHIR
+        // 4. LOGIK ENGIN MUSIC BACKGROUND
         const musicTrack = document.getElementById("canva-bg-music");
         const musicControllerButton = document.getElementById("music-floating-toggle");
         const envelopeVid = document.getElementById("envelope-video");
@@ -1669,23 +1629,15 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             
             envelopeVid.addEventListener('ended', () => {
                 envelopeVid.pause();
-                console.log("Video dah habis main sepunuhnya. Auto-freeze dekat frame terakhir.");
             });
         }
 
-        // ==========================================================================
-        // LOGIK KAWALAN AUTO-SCROLL TANPA HENTI & PENGESAN SENTUHAN JARI
-        // ==========================================================================
-        let infiniteScrollInterval = null; // Pembolehubah global untuk pegang enjin skrol
+        let infiniteScrollInterval = null; 
 
-        // Fungsi khas untuk matikan auto-skrol sebaik sahaja user usik skrin
         function stopAutoScroll() {
             if (infiniteScrollInterval) {
                 clearInterval(infiniteScrollInterval);
                 infiniteScrollInterval = null;
-                console.log("Auto-scroll deactivated: User took over control.");
-                
-                // 🚀 TRIK IPHONE: Hidupkan balik smooth scroll untuk kegunaan butang Navigasi bawah
                 document.documentElement.style.scrollBehavior = "smooth";
                 document.body.style.scrollBehavior = "smooth";
                 
@@ -1695,13 +1647,12 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             }
         }
 
-        // FUNGSI PICUAN: Bila tetamu picit butang Wax Seal Merah
         function bukaSampulSurat() {
             if (musicTrack) {
                 musicTrack.play().then(() => {
                     trackPlayingStatus = true;
                     if (musicControllerButton) musicControllerButton.innerText = "🎵";
-                }).catch(err => console.log("Audio play blocked by browser: ", err));
+                }).catch(err => console.log("Audio play blocked: ", err));
             }
 
             const welcomeOverlay = document.getElementById("welcome-cover");
@@ -1709,8 +1660,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 welcomeOverlay.classList.add("fade-out-page");
             }
 
-            // 🚀 KUNCI GERENTI JADI UNTUK IPHONE:
-            // Kita ruyung matikan 'scroll-behavior: smooth' dekat HTML & Body secara paksa
             document.documentElement.style.scrollBehavior = "auto";
             document.body.style.scrollBehavior = "auto";
 
@@ -1727,17 +1676,14 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
 
                     if ((window.innerHeight + currentScroll) >= (totalHeight - 5)) {
                         clearInterval(infiniteScrollInterval);
-                        // Hidupkan balik smooth scroll bila dah sampai bawah sekali
                         document.documentElement.style.scrollBehavior = "smooth";
                     } else {
-                        // Tolak 1 pixel mentah tanpa kekangan CSS smooth
                         window.scrollBy(0, 1); 
                     }
-                }, 14); // Di-lajukan sikit ke 14ms biar nampak berseri dekat skrin 120Hz iPhone
+                }, 14); 
             }, 2100); 
         }
 
-        // Fungsi Butang Floating Toggle Musik Manual
         if (musicControllerButton) {
             musicControllerButton.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -1752,11 +1698,8 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        /* ==========================================================================
-           5. ENGIN DETEKSI SKROL PHONE (Intersection Observer) - BUBBLE SECTIONS
-           ========================================================================= */
+        // 5. ENJIN DETEKSI SKROL PANEL BUBBLE
         const allFrames = document.querySelectorAll('.section-frame');
-
         const observerOptions = {
             root: null,
             rootMargin: "-35% 0px -35% 0px", 
@@ -1777,38 +1720,24 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             scrollObserver.observe(frame);
         });
 
-        // ==========================================================================
-        // ENJIN AUTOMATIK: TARIK DATA WISHES DARI GOOGLE SHEET CSV LIVE
-        // ==========================================================================
-        // !!! KAU GANTIKAN LINK BAWAH NI DENGAN LINK CSV GOOGLE SHEET KAU !!!
-        // ==========================================================================
-        // ENJIN BARU: KOD DAH DI-FIT DENGAN LAJUR GOOGLE SHEETS ASSET IMAGE_896E75.PNG
-        // ==========================================================================
-        
-        // 1. !!! TAMPAL LINK CSV KAU DEKAT BAWAH NI !!!
-        // Ambil dari File -> Share -> Publish to web -> Link -> CSV
+        // ENJIN TUGASAN UCAPAN GUESTBOOK LIVE CSV
         const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDtgBEv7XZCgxNpdZzkWxeAC57n-aZJWGJwgaS1mQdiAUlwIRYmR5YIAnIFsQS1fS7J_LpIKb-QJCz/pub?output=csv"; 
 
         async function fetchLiveWishes() {
             try {
                 const response = await fetch(googleSheetCsvUrl);
                 const data = await response.text();
-                
-                const rows = data.split('\n').slice(1); // Potong baris header
+                const rows = data.split('\n').slice(1);
                 const wishesBox = document.getElementById("live-wishes-box");
-                wishesBox.innerHTML = ""; // Buang tulisan loading
+                wishesBox.innerHTML = ""; 
                 
                 let validWishesCount = 0;
 
                 rows.forEach(row => {
-                    // Trik pecahkan data CSV secara selamat jika tetamu ada letak koma dalam ucapan
                     const columns = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    // KOD DAH DIPETAKAN IKUT LAJUR SEBENAR:
-                    const senderName = columns[1] ? columns[1].replace(/"/g, '').trim() : ""; // Lajur B (Nama Penuh)
-                    const guestWish = columns[5] ? columns[5].replace(/"/g, '').trim() : "";  // Lajur F (Ucapan & Doa) - FIX!
+                    const senderName = columns[1] ? columns[1].replace(/"/g, '').trim() : ""; 
+                    const guestWish = columns[5] ? columns[5].replace(/"/g, '').trim() : "";  
 
-                    // Paparkan ucapan yang ada isi sahaja
                     if (senderName && guestWish && guestWish.length > 2) {
                         validWishesCount++;
                         const wishCard = document.createElement("div");
@@ -1817,22 +1746,18 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                             <p class="wish-text">"${guestWish}"</p>
                             <p class="wish-sender">✍️ ${senderName}</p>
                         `;
-                        // Ucapan terbaru masuk atas sekali (Latest first)
                         wishesBox.insertBefore(wishCard, wishesBox.firstChild);
                     }
                 });
 
                 if (validWishesCount === 0) {
-                    wishesBox.innerHTML = '<p class="no-wishes">Belum ada ucapan lagi. Jadilah yang pertama memberikan ucapan! ❤️</p>';
+                    wishesBox.innerHTML = '<p class="no-wishes">Belum ada ucapan lagi. ❤️</p>';
                 }
-
             } catch (error) {
                 console.error("Ralat memuatkan ucapan: ", error);
-                document.getElementById("live-wishes-box").innerHTML = '<p class="no-wishes">Gagal memuatkan ucapan live. Cuba refresh semula.</p>';
             }
         }
 
-        // Jalankan enjin tarik data sepadan loading website
         window.addEventListener('DOMContentLoaded', fetchLiveWishes);
 
     </script>
