@@ -5,22 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Walimatulurus Irfan & Bini Irfan</title>
     
-    <!-- Google Fonts untuk klon gaya tulisan Canva kau -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Google Fonts Baru: Ditambah Kaushan Script klon premium Canva -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Kaushan+Script&display=swap" rel="stylesheet">
     
-    <!-- AOS Library CSS untuk animasi masuk lembut -->
+    <!-- AOS Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            --bg-cream: #ffe3be ; /* Warna latar belakang krim floral lembut kau */
-            --maroon-text: #7d415d; /* Warna tulisan merah manggis/maroon */
-            --nav-bg: #ffe3be; /* Warna bar navigasi atas */
-            --btn-pink: #82796B; /* Warna butang navigasi pastel */
-            --card-pink: #ffe3be; /* Warna panel penuh untuk ruangan pop-up */
+            --bg-cream: #ffe3be;
+            --maroon-text: #7d415d;
+            --nav-bg: #ffe3be;
+            --btn-pink: #82796B;
+            --card-pink: #ffe3be;
             --font-serif: 'Cormorant Garamond', serif;
             --font-sans: 'Montserrat', sans-serif;
         }
@@ -41,9 +40,7 @@
             overflow-x: hidden;
         }
 
-        /* ==========================================================================
-           STYLE REKAAN ENVELOPE & INTERAKTIF WAX SEAL (Slaid Slow 2 Saat)
-           ========================================================================== */
+        /* WELCOME COVER SCREEN */
         .welcome-overlay {
             position: fixed;
             top: 0;
@@ -51,21 +48,18 @@
             width: 100%;
             height: 100%;
             background-color: #f9ebe6;
-            z-index: 9999; /* Sentiasa berada di lapisan paling atas sekali */
+            z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            /* TUKAR KEPADA 2 SAAT: Memenuhi permintaan Omar untuk transisi slow-mo */
             transition: transform 4.0s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* Mengangkat skrin sampul surat naik ke atas selepas animasi video 1 saat selesai */
         .welcome-overlay.fade-out-page {
             transform: translateY(-100%);
         }
 
-        /* Menjadikan video sebagai background penuh yang responsif mengikut resolusi phone */
         .envelope-video-bg {
             position: absolute;
             width: 100%;
@@ -77,7 +71,6 @@
             z-index: 1;
         }
 
-        /* Container konten lutsinar di atas lapisan video */
         .welcome-content-container {
             position: relative;
             width: 100%;
@@ -89,7 +82,6 @@
             align-items: center;
         }
 
-        /* BUTANG WAX SEAL: Ditambah ruang acuan untuk meletakkan teks melengkung SVG */
         .btn-wax-seal-trigger {
             position: absolute;
             bottom: 30%; 
@@ -107,7 +99,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* GAYA KHUSUS IMEJ PNG WAX SEAL */
         .wax-seal-img {
             width: 85px;  
             height: 85px;
@@ -117,7 +108,6 @@
             z-index: 2;
         }
 
-        /* SYSTEM TULISAN MELENGKUNG TAP HERE */
         .curved-text-svg {
             position: absolute;
             top: 7px;
@@ -137,47 +127,28 @@
             text-transform: uppercase;
         }
 
-        /* Efek klik mekanikal pada wax seal */
-        .btn-wax-seal-trigger:active .wax-seal-img,
-        .btn-wax-seal-trigger:active .curved-text-svg {
-            transform: scale(0.92);
-        }
-
         @keyframes waxSealPulse {
             from { transform: scale(1); }
             to { transform: scale(1.05); }
         }
 
-        /* Pembungkus Utama (Sama saiz dengan resolusi telefon bimbit kau) */
+        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND IMEJ STATIK */
         .main-wrapper {
             width: 100%;
             max-width: 450px;
             background-color: var(--bg-cream);
+            /* ⚠️ Gantikan 'bgimage.png' dengan nama fail gambar background kau */
+            background-image: url('BgImage2.jpeg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            padding: 25px 15px 80px 15px; /* Ditambah padding atas sikit */
+            padding: 25px 15px 80px 15px;
         }
 
-        /* Paksa video duduk diam kat belakang masa skrol tanpa pepijat zoom */
-        .body-video-bg {
-            position: fixed; 
-            top: 0;
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 100%;
-            max-width: 450px; 
-            height: 100vh; 
-            object-fit: cover; 
-            object-position: center; 
-            pointer-events: none; 
-            z-index: 0; 
-            filter: blur(0px);
-        }
-
-        /* ==========================================================================
-           STICKY BOTTOM NAVIGATION BAR (Gaya Premium App - Sentiasa Kat Bawah)
-           ========================================================================== */
+        /* STICKY BOTTOM NAVIGATION BAR */
         .bottom-navbar {
             position: fixed; 
             bottom: 0;       
@@ -211,123 +182,47 @@
             color: var(--maroon-text);
         }
 
-        /* ==========================================================================
-           PERBAIKAN MUTLAK: KASI BUNGA CORNER MENINDIH BORDER (BUANG OVERFLOW BUG)
-           ========================================================================== */
-        .section-frame {
-            margin: 25px auto;
-            padding: 50px 30px;
+        /* 🚀 REKAAN TANPA FRAME & ANIMASI SCROLL REVERSIBLE */
+        .section-clean {
+            margin: 35px auto;
+            padding: 20px 10px;
             text-align: center;
             position: relative; 
-            
-            /* BUANG IMMEJ ASAL DARI SINI: Kita tukar pakai warna base lutsinar sahaja */
-            background-color: rgba(255, 255, 255, 0.15); /* Warna putih base gila-gila cair */
-            
-            border: none;
-            border-radius: 35px;
-            overflow: visible; 
-            
-            transform: scale(0.8);
-            opacity: 0.55; /* Kekalkan base opacity asal untuk scroll animation kau */
-            box-shadow: none; 
             z-index: 2; 
-            
-            /* Efek glassmorphism biar partikel video nampak tembus bayang perlahan */
-            backdrop-filter: blur(4px); 
-            -webkit-backdrop-filter: blur(4px);
-            
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2), 
-                        opacity 0.5s ease;
+            /* Keadaan asas sebelum scroll masuk */
+            transform: scale(0.85);
+            opacity: 0.3;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
         }
 
-        /* Pastikan kandungan teks/gambar pengantin sentiasa berada di atas layer background dan solid 100% */
-        .frame-content-isolate {
-            position: relative;
-            z-index: 5;
-            width: 100%;
-            height: 100%;
+        /* Bila masuk skrin, membesar & solid */
+        .section-clean.active {
+            transform: scale(1);
+            opacity: 1;
         }
 
-        /* 
-           LAPISAN KHAS INDUK BACKGROUND: 
-           Di sinilah kita panggil 'Background2.png' dan paksa dia jadi lutsinar!
-        */
-        .section-frame .frame-bg-layer {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            
-            background-image: url('Background2.png');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 100% 100%;
-            border-radius: 35px;
-            
-            /* 
-               ⚠️ !!! EJAS TAHAP LUTSINAR DEKAT SINI !!! 
-               Nilai 0.35 maksudnya imej kad kau akan jadi 35% jelas (65% lutsinar tembus ke video).
-               Kalau nak lagi transparent, kecilkan lagi nombor ni (contoh: 0.2).
-            */
-            opacity: 0.35; 
-            
-            z-index: -1; /* Tolak dia duduk belakang teks, tapi atas video bg */
+        /* 🎨 REKAAN DIVIDER GRAPHIC IMAGE */
+        .section-divider-img {
+            width: 60%;
+            max-width: 220px;
+            height: auto;
+            display: block;
+            margin: 25px auto 10px auto;
             pointer-events: none;
-        }
-
-        /* 1. Bucu Kiri Atas (::before) - Diperkemaskan koordinat */
-        .section-frame::before {
-            content: '';
-            position: absolute;
-            top: -12px;   /* Tolak keluar sikit dari border supaya nampak efek membalut bucu */
-            left: -13px;  /* Tolak keluar sikit */
-            width: 150px;  
-            height: 150px;
-            background-image: url('flowercorner2.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 99;  /* Naikkan layer gila-gila tinggi menindih segala content */
-            pointer-events: none;
-            transform: rotate(0deg),scale(0.85); 
-        }
-
-        /* 2. Bucu Kanan Bawah (::after) - Diperkemaskan koordinat */
-        .section-frame::after {
-            content: '';
-            position: absolute;
-            bottom: -12px; /* Tolak keluar sikit */
-            right: -13px;  /* Tolak keluar sikit */
-            width: 150px;
-            height: 150px;
-            background-image: url('flowercorner2.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 99;   /* Naikkan layer gila-gila tinggi */
-            pointer-events: none;
-            transform: scaleX(-1) rotate(-90deg); 
-        }
-        /* KEADAAN AKTIF: Bila kad berada tepat di tengah skrin */
-        .section-frame.active {
-            transform: scale(0.95);
-            opacity: 0.9;
-            box-shadow: none; 
-            z-index: 5; 
         }
 
         /* HERO INVITATION STYLE */
         .hero-section {
-            padding-top: 40px;
-            padding-bottom: 30px;
+            padding-top: 20px;
+            padding-bottom: 10px;
         }
 
         .hero-groom-name, .hero-bride-name {
-            font-family: 'Kaushan Script', cursive; /* <<< Pakai Kaushan Script kegemaran Omar */
-            font-size: 42px; /* Saiz optimum mengikut ketebalan font berus */
+            font-family: 'Kaushan Script', cursive;
+            font-size: 42px;
             color: var(--maroon-text);
             line-height: 1.3;
-            font-weight: 400; /* Tebal semula jadi tak payah bold manual */
+            font-weight: 400;
             margin: 0;
             padding: 0;
         }
@@ -387,13 +282,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* PARENTS & COUPLE PHOTO STYLE */
-        .bismillah-text {
-            font-size: 24px;
-            color: #000000;
-            margin-bottom: 15px;
-        }
-
         .greeting-sub {
             font-size: 11px;
             font-weight: 600;
@@ -403,7 +291,7 @@
 
         .parents-full-name {
             font-family: 'Amiri', serif;
-            font-size: 18px; /* <<< Dah ciut sikit bro */
+            font-size: 17px; 
             color: var(--maroon-text);
             font-weight: 700;
             margin: 5px 0;
@@ -437,85 +325,41 @@
             text-align: right;
         }
 
-        
-
-        /* TRIK MULTIMEDIA: Kita jadikan frame_bunga.png sebagai pseudo-element ::after */
-        /* Cara ni paksa frame duduk kat lapisan paling atas sekali (foreground) */
         .profile-wooden-frame {
-            width: 135px;  /* Diturunkan dari 155px ke 135px supaya ada ruang untuk teks */
-            height: 135px; /* Diturunkan dari 155px ke 135px */
-            background-color: transparent;
+            width: 135px; 
+            height: 135px;
             position: relative;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: visible;
-            transition: transform 0.3s ease;
-        }
-
-        /* Trik pseudo-element membalut frame bunga */
-        .profile-wooden-frame::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('frame.png'); 
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .profile-wooden-frame:hover {
-            transform: scale(1.05);
         }
 
         .profile-wooden-frame img {
-            width: 70%;  
-            height: 80%; 
+            width: 85%;  
+            height: 85%; 
             object-fit: cover;
-            border-radius: 0px; 
-            z-index: 1;  
-            position: relative;
+            border-radius: 50%; 
         }
 
-        /* 1. GAYA IMEJ BISMILLAH BARU (Ganti teks ﷽ lama) */
         .bismillah-img {
-            width: 140px; /* Saiz ikut gambar WhatsApp kau */
+            width: 140px;
             height: auto;
             margin: 0 auto 15px auto;
             display: block;
         }
 
-        /* 2. NAMA IBU BAPA: Ditukar ke Font Amiri */
-        .parents-full-name {
-            font-family: 'Amiri', serif; /* <<< INI AMIRI */
-            font-size: 17px; 
-            color: var(--maroon-text);
-            font-weight: 700;
-            margin: 5px 0;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-        }
-
         .couple-text-details {
-            padding: 0 10px; /* Dikurangkan padding sikit biar tak tolak text jauh sangat */
+            padding: 0 10px;
             font-family: 'Italianno', cursive;
-            font-size: 20px; /* Dinaikkan ke 30px semula sbb ruang dah luas, tulisan akan nampak herlok */
+            font-size: 20px;
             font-weight: 400;
             color: var(--maroon-text);
             line-height: 1.1;
             letter-spacing: 0.5px;
-            
-            /* KUNCI UTAMA: Ambil baki ruang kosong skrin sepenuhnya tanpa tersekat */
             flex: 1; 
         }
 
-        /* COUNTDOWN & VECTOR STYLE */
         .section-headline-serif {
             font-family: var(--font-serif);
             font-size: 26px;
@@ -557,7 +401,6 @@
             display: block;
         }
 
-        /* ITINERARY & DETAILS STYLE */
         .huge-section-title {
             font-family: var(--font-serif);
             font-size: 54px;
@@ -648,7 +491,7 @@
             padding: 0 10px;
         }
 
-        /* PANEL OVERLAY SYSTEM (Bbubble pop effect) */
+        /* OVERLAY SYSTEM */
         .fullpage-overlay {
             position: fixed;
             top: 0;
@@ -687,7 +530,6 @@
             color: #4a4a4a;
             box-shadow: 0 15px 35px rgba(128, 51, 60, 0.25);
             text-align: center;
-            transform: scale(1); 
             animation: bubbleInCard 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
         }
 
@@ -719,7 +561,7 @@
             0% { transform: scale(0.6); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        
+
         .dashboard-card-headline {
             font-size: 14px;
             text-transform: uppercase;
@@ -751,22 +593,6 @@
             display: inline-block;
         }
 
-        .dashboard-qr-wrapper {
-            width: 200px;
-            height: 200px;
-            background: white;
-            margin: 25px auto;
-            padding: 10px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .dashboard-qr-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
         .music-floating-toggle {
             position: fixed;
             bottom: 85px; 
@@ -790,21 +616,16 @@
             .music-floating-toggle { right: 25px; }
         }
 
-        /* ==========================================================================
-           REKAAN SEKSYEN WISHES (LIVE RSVP GOOGLE SHEETS FEED)
-           ========================================================================== */
+        /* WISHES GUESTBOOK STYLE */
         .wishes-container {
-            max-height: 450px; /* Hadkan tinggi supaya tak memanjang sampai kiamat */
-            overflow-y: auto;  /* Biar kotak ucapan ni boleh di-skrol dalam kad */
+            max-height: 450px;
+            overflow-y: auto; 
             padding-right: 5px;
             margin-top: 20px;
             text-align: left;
         }
 
-        /* Rekaan bar skrol comel untuk phone */
-        .wishes-container::-webkit-scrollbar {
-            width: 4px;
-        }
+        .wishes-container::-webkit-scrollbar { width: 4px; }
         .wishes-container::-webkit-scrollbar-thumb {
             background: var(--btn-pink);
             border-radius: 10px;
@@ -843,28 +664,17 @@
             padding: 20px 0;
         }
 
-        /* ==========================================================================
-           REKAAN KHUSUS GRID HADIAH DI DALAM POP-UP OVERLAY
-           ========================================================================== */
+        /* GIFT LIST POPUP STYLE */
         .gift-overlay-scroll {
             width: 100%;
-            max-height: 60vh; /* Hadkan tinggi supaya kotak grid boleh di-skrol dalam card pop-up */
+            max-height: 60vh;
             overflow-y: auto;
             padding-right: 5px;
             margin-top: 15px;
         }
 
-        /* Bar skrol comel dalam pop-up */
-        .gift-overlay-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .gift-overlay-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 10px;
-        }
-
         .giftlist-intro-box-popup {
-            background-color: rgba(0, 0, 0, 0.2); /* Gelap lutsinar sikit sebab kad induk dah pink */
+            background-color: rgba(0, 0, 0, 0.2);
             color: #ffffff;
             padding: 15px;
             border-radius: 20px;
@@ -882,11 +692,13 @@
         }
 
         .giftlist-popup-card {
+            position: relative;
             background: #ffffff;
             border-radius: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -921,27 +733,13 @@
             gap: 3px;
         }
 
-        /* ==========================================================================
-           CSS SISTEM GRID DYNAMIC & OVERLAY CLAIMED (OPACITY 50%)
-           ========================================================================== */
-        .giftlist-popup-card {
-            position: relative; /* Wajib untuk kedudukan absolute overlay */
-            background: #ffffff;
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        /* Lapisan Hitam 50% jika hadiah sudah di-claim */
         .gift-claimed-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Hitam dengan opacity 50% */
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 10;
             display: flex;
             justify-content: center;
@@ -952,12 +750,9 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
-            pointer-events: none; /* Biar user tak boleh klik kad yang dah claimed */
+            pointer-events: none;
         }
 
-        /* ==========================================================================
-           STYLE INTERFACE SUB-MODAL (KLON TEPAT STYLE GIFTFUL KAU)
-           ========================================================================== */
         .giftful-submodal {
             position: absolute;
             top: 0;
@@ -965,7 +760,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
-            z-index: 2100; /* Duduk atas dari pink card */
+            z-index: 2100;
             display: none;
             justify-content: center;
             align-items: center;
@@ -973,7 +768,7 @@
         }
 
         .giftful-modal-content {
-            background: #222222; /* Kontras gelap premium */
+            background: #222222;
             color: white;
             width: 100%;
             max-width: 340px;
@@ -1034,7 +829,7 @@
 
         .giftful-claim-trigger {
             width: 100%;
-            background-color: #52b788; /* Hijau cerah mesra Giftful */
+            background-color: #52b788;
             color: white;
             border: none;
             padding: 12px;
@@ -1046,16 +841,12 @@
             text-align: center;
             display: block;
         }
-        
-        .giftful-claim-trigger.claimed-state {
-            background-color: #e63946; /* Merah untuk batal claim */
-        }
 
         .giftful-store-anchor {
             display: flex;
             align-items: center;
             width: 100%;
-            background: #1a3a2a; /* Warna latar belakang hijau kedai gelap */
+            background: #1a3a2a;
             border: 1px solid #2d6a4f;
             color: #52b788;
             padding: 12px;
@@ -1064,23 +855,19 @@
             font-size: 13px;
             font-weight: 500;
         }
-
     </style>
 </head>
 <body>
 
-    <!-- ================= WELCOME COVER SCREEN: AUTOMATIC VIDEO PLAY ================= -->
+    <!-- WELCOME COVER SCREEN -->
     <div id="welcome-cover" class="welcome-overlay">
         <video id="envelope-video" class="envelope-video-bg" autoplay muted playsinline>
             <source src="envelopev1.mp4" type="video/mp4">
         </video>
 
-        <!-- Container Konten Lutsinar -->
         <div class="welcome-content-container">
-            <!-- Butang Wax Seal Interaktif (Dah masuk teks melengkung SVG permintaan Omar) -->
             <button onclick="bukaSampulSurat()" class="btn-wax-seal-trigger" aria-label="Buka Kad">
                 <img src="wax_seal.png" alt="Wax Seal Red" class="wax-seal-img">
-                
                 <svg class="curved-text-svg" viewBox="0 0 100 100">
                     <path id="textPath" d="M 12,50 A 38,38 0 0,0 88,50" fill="transparent" />
                     <text>
@@ -1094,166 +881,153 @@
     <!-- MAIN WRAPPER UNIT -->
     <div class="main-wrapper">
 
-        <!-- Video Background Statik -->
-        <video id="html-bg-video" class="body-video-bg" autoplay loop muted playsinline>
-            <source src="bgvid.mp4" type="video/mp4">
-        </video>
-        
         <!-- ================= FRAME 1: HERO HOME PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA (SUPAYA TEKS KEKAL CERAH/SOLID) -->
-            <div class="frame-content-isolate">
-                <section class="hero-section" style="padding: 0;">
-                    <div class="hero-groom-name">Omar Farouq</div>
-                    <span class="hero-ampersand">&</span>
-                    <div class="hero-bride-name">Nurul Izzah</div>
-                    
-                    <img src="sakura.png" alt="Sakura Illustration" class="center-flower-illustration">
-                    
-                    <p class="title-walimatulurus">WALIMATULURUS</p>
-                    
-                    <div class="event-meta-info">
-                        <div>OGOS 30,<br>2026</div>
-                        <div class="vertical-line"></div>
-                        <div>PICC<br>PUTRAJAYA</div>
-                    </div>
-                    
-                    <p class="primary-hashtag">#OMarriedIzzah</p>
-                </section>
-            </div>
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section class="hero-section">
+                <div class="hero-groom-name">Omar Farouq</div>
+                <span class="hero-ampersand">&</span>
+                <div class="hero-bride-name">Nurul Izzah</div>
+                
+                <img src="sakura.png" alt="Sakura Illustration" class="center-flower-illustration">
+                
+                <p class="title-walimatulurus">WALIMATULURUS</p>
+                
+                <div class="event-meta-info">
+                    <div>OGOS 30,<br>2026</div>
+                    <div class="vertical-line"></div>
+                    <div>PICC<br>PUTRAJAYA</div>
+                </div>
+                
+                <p class="primary-hashtag">#OMarriedIzzah</p>
+            </section>
         </div>
+
+        <!-- 🚀 DIVIDER GRAPHIC IMAGE 1 -->
+        <!-- ⚠️ Gantikan 'line_divider.png' dengan nama fail imej divider kau -->
+        <img src="Divider.png" alt="Divider Line" class="section-divider-img">
 
         <!-- ================= FRAME 2: PARENTS & PHOTOS PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA -->
-            <div class="frame-content-isolate">
-                <section style="padding: 0;">
-                    <div>
-                        <!-- KOD BARU: Teks bismillah lama dah diganti dengan imej bismillah.png -->
-                        <img src="bismillah.png" alt="Bismillah Kaligrafi" class="bismillah-img">
-                        
-                        <p class="greeting-sub">ASSALAMUALAIKUM W.B.T & SALAM SEJAHTERA</p>
-                        
-                        <h2 class="parents-full-name">RAHIM BIN GHAZALI</h2>
-                        <p style="font-size: 14px; margin: 2px 0; font-family: var(--font-sans);">&</p>
-                        <h2 class="parents-full-name">NORHAYATI ABDUL RAHIM</h2>
-                        
-                        <p class="invitation-body-paragraph">
-                            DENGAN PENUH KESYUKURAN DAN HORMATNYA MENJEMPUT YBHG. DATO'/DATIN/TUAN/PUAN/ENCIK/CIK KE MAJLIS PERKAHWINAN PUTERA KAMI
-                        </p>
-                    </div>
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section>
+                <div>
+                    <img src="bismillah.png" alt="Bismillah Kaligrafi" class="bismillah-img">
+                    <p class="greeting-sub">ASSALAMUALAIKUM W.B.T & SALAM SEJAHTERA</p>
+                    
+                    <h2 class="parents-full-name">RAHIM BIN GHAZALI</h2>
+                    <p style="font-size: 14px; margin: 2px 0; font-family: var(--font-sans);">&</p>
+                    <h2 class="parents-full-name">NORHAYATI ABDUL RAHIM</h2>
+                    
+                    <p class="invitation-body-paragraph">
+                        DENGAN PENUH KESYUKURAN DAN HORMATNYA MENJEMPUT YBHG. DATO'/DATIN/TUAN/PUAN/ENCIK/CIK KE MAJLIS PERKAHWINAN PUTERA KAMI
+                    </p>
+                </div>
 
-                    <div class="split-couple-container">
-                        <!-- Baris Pengantin Perempuan (Kiri) -->
-                        <div class="couple-row-block">
-                            <div class="profile-wooden-frame">
-                                <img src="gambar_omar.png" alt="Omar Farouq">
-                            </div>
-                            <div class="couple-text-details">
-                                Omar Farouq Bin Rahim
-                            </div>
+                <div class="split-couple-container">
+                    <div class="couple-row-block">
+                        <div class="profile-wooden-frame">
+                            <img src="gambar_omar.png" alt="Omar Farouq">
                         </div>
-
-                        <!-- Baris Pengantin Lelaki (Kanan) -->
-                        <div class="couple-row-block reverse-direction" style="margin-bottom: 0;">
-                            <div class="profile-wooden-frame">
-                                <img src="gambar_izzah.png" alt="Nurul Izzah">
-                            </div>
-                            <div class="couple-text-details">
-                                Nurul Izzah Binti Muhammad Zahir
-                            </div>
+                        <div class="couple-text-details">
+                            Omar Farouq Bin Rahim
                         </div>
                     </div>
-                </section>
-            </div>
+
+                    <div class="couple-row-block reverse-direction" style="margin-bottom: 0;">
+                        <div class="profile-wooden-frame">
+                            <img src="gambar_izzah.png" alt="Nurul Izzah">
+                        </div>
+                        <div class="couple-text-details">
+                            Nurul Izzah Binti Muhammad Zahir
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
+
+        <!-- 🚀 DIVIDER GRAPHIC IMAGE 2 -->
+        <img src="Divider.png" alt="Divider Line" class="section-divider-img">
 
         <!-- ================= FRAME 3: COUNTDOWN TIME PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA -->
-            <div class="frame-content-isolate">
-                <section style="padding: 0;">
-                    <h2 class="section-headline-serif">MENANTI HARI BAHAGIA</h2>
-                    
-                    <div class="canva-countdown-display" id="live-timer-digits">
-                        00:00:00:00
-                    </div>
-                    <div class="canva-countdown-labels">
-                        <span>Hari</span>
-                        <span>Jam</span>
-                        <span>Minit</span>
-                        <span>Saat</span>
-                    </div>
-                    
-                    <img src="Bride.png" alt="Faceless Couple Vector" class="illustration-faceless-couple">
-                </section>
-            </div>
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section>
+                <h2 class="section-headline-serif">MENANTI HARI BAHAGIA</h2>
+                
+                <div class="canva-countdown-display" id="live-timer-digits">
+                    00:00:00:00
+                </div>
+                <div class="canva-countdown-labels">
+                    <span>Hari</span>
+                    <span>Jam</span>
+                    <span>Minit</span>
+                    <span>Saat</span>
+                </div>
+                
+                <img src="Bride.png" alt="Faceless Couple Vector" class="illustration-faceless-couple">
+            </section>
         </div>
+
+        <!-- 🚀 DIVIDER GRAPHIC IMAGE 3 -->
+        <img src="Divider.png" alt="Divider Line" class="section-divider-img">
 
         <!-- ================= FRAME 4: ITINERARY TIME PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA -->
-            <div class="frame-content-isolate">
-                <section style="padding: 0;">
-                    <h2 class="huge-section-title">BUTIRAN<br>MAJLIS</h2>
-                    
-                    <p class="itinerary-sublabel" style="margin-top: 0;">Tarikh</p>
-                    <p class="itinerary-value-text" style="font-weight: 500;">
-                        AHAD<br>30 OGOS 2026<br>17 RABIULAWAL 1448 AH
-                    </p>
-                    
-                    <p class="itinerary-sublabel">Aturcara Majlis</p>
-                    <div class="canva-vertical-timeline">
-                        <div class="timeline-row-item">
-                            <span class="event-time">11:00 AM</span>
-                            <span class="event-name">KETIBAAN TETAMU &<br>JAMUAN MAKAN</span>
-                        </div>
-                        <div class="timeline-row-item">
-                            <span class="event-time">12:00 PM</span>
-                            <span class="event-name">KETIBAAN PENGANTIN</span>
-                        </div>
-                        <div class="timeline-row-item" style="margin-bottom: 0;">
-                            <span class="event-time">4:00 PM</span>
-                            <span class="event-name">MAJLIS SELESAI</span>
-                        </div>
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section>
+                <h2 class="huge-section-title">BUTIRAN<br>MAJLIS</h2>
+                
+                <p class="itinerary-sublabel" style="margin-top: 0;">Tarikh</p>
+                <p class="itinerary-value-text" style="font-weight: 500;">
+                    AHAD<br>30 OGOS 2026<br>17 RABIULAWAL 1448 AH
+                </p>
+                
+                <p class="itinerary-sublabel">Aturcara Majlis</p>
+                <div class="canva-vertical-timeline">
+                    <div class="timeline-row-item">
+                        <span class="event-time">11:00 AM</span>
+                        <span class="event-name">KETIBAAN TETAMU &<br>JAMUAN MAKAN</span>
                     </div>
-                    
-                    <p class="itinerary-sublabel">Tempat</p>
-                    <p class="itinerary-value-text" style="margin-bottom: 0;">
-                        <a href="https://maps.app.goo.gl/KpApyKnqbsFJVSf48?g_st=ac" target="_blank" class="embedded-location-anchor">MAGICA WINTER HALL<br>PUTRAJAYA INTERNATIONAL
-CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
-                    </p>
-                </section>
-            </div>
+                    <div class="timeline-row-item">
+                        <span class="event-time">12:00 PM</span>
+                        <span class="event-name">KETIBAAN PENGANTIN</span>
+                    </div>
+                    <div class="timeline-row-item" style="margin-bottom: 0;">
+                        <span class="event-time">4:00 PM</span>
+                        <span class="event-name">MAJLIS SELESAI</span>
+                    </div>
+                </div>
+                
+                <p class="itinerary-sublabel">Tempat</p>
+                <p class="itinerary-value-text" style="margin-bottom: 0;">
+                    <a href="https://maps.app.goo.gl/KpApyKnqbsFJVSf48?g_st=ac" target="_blank" class="embedded-location-anchor">MAGICA WINTER HALL<br>PUTRAJAYA INTERNATIONAL CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
+                </p>
+            </section>
         </div>
 
+        <!-- 🚀 DIVIDER GRAPHIC IMAGE 4 -->
+        <img src="Divider.png" alt="Divider Line" class="section-divider-img">
+
         <!-- ================= FRAME 5: FOOTER BLESSING PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000" style="margin-bottom: 10px;">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA -->
-            <div class="frame-content-isolate">
-                <section style="padding: 0;">
-                    <p class="prayer-blessing-text">
-                        YA ALLAH, BERKATILAH PENYATUAN INI, SATUKANLAH HATI MEREKA DALAM KASIH DAN RAHMAT-MU, SERTA KURNIAKANLAH KEBAHAGIAAN YANG BERKEKALAN HINGGA KE SYURGA-MU. AAMIIN YA RABBAL 'ALAMIN.
-                    </p>
-                    <p style="font-size: 11px; font-family: var(--font-sans); margin-bottom: 5px; font-weight: 500;">SURAH AN-NABA' AYAT 8:</p>
-                    <p style="font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--maroon-text); margin-bottom: 0;">"Dan Kami menciptakan kamu berpasang-pasangan."</p>
-                </section>
-            </div>
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section>
+                <p class="prayer-blessing-text">
+                    YA ALLAH, BERKATILAH PENYATUAN INI, SATUKANLAH HATI MEREKA DALAM KASIH DAN RAHMAT-MU, SERTA KURNIAKANLAH KEBAHAGIAAN YANG BERKEKALAN HINGGA KE SYURGA-MU. AAMIIN YA RABBAL 'ALAMIN.
+                </p>
+                <p style="font-size: 11px; font-family: var(--font-sans); margin-bottom: 5px; font-weight: 500;">SURAH AN-NABA' AYAT 8:</p>
+                <p style="font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--maroon-text); margin-bottom: 0;">"Dan Kami menciptakan kamu berpasang-pasangan."</p>
+            </section>
+        </div>
+
+        <!-- 🚀 DIVIDER GRAPHIC IMAGE 5 -->
+        <img src="Divider.png" alt="Divider Line" class="section-divider-img">
+
+        <!-- ================= FRAME 4.5: WISHES GUESTBOOK PAGE ================= -->
+        <div class="section-clean" data-aos="zoom-in" data-aos-duration="800">
+            <section style="width: 100%;">
+                <h2 class="section-headline-serif" style="margin-bottom: 10px; font-size: 24px;">UCAPAN TETAMU</h2>
+                
+                <div id="live-wishes-box" class="wishes-container">
+                    <p class="no-wishes">Sedang memuatkan ucapan indah...</p>
+                </div>
+            </section>
         </div>
 
         <!-- STICKY BOTTOM NAVIGATION BAR -->
@@ -1264,31 +1038,9 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             <button class="nav-button" onclick="window.open('https://maps.app.goo.gl/KpApyKnqbsFJVSf48?g_st=ac', '_blank')">Lokasi</button>
         </nav>
 
-        <!-- ================= FRAME 4.5: WISHES GUESTBOOK PAGE ================= -->
-        <div class="section-frame" data-aos="fade-up" data-aos-duration="1000">
-            <!-- 🚀 LAPISAN BACKGROUND LUTSINAR -->
-            <div class="frame-bg-layer"></div>
-            
-            <!-- 🚀 PEMBUNGKUS KANDUNGAN UTAMA -->
-            <div class="frame-content-isolate">
-                <section style="padding: 0; width: 100%;">
-                    <h2 class="section-headline-serif" style="margin-bottom: 10px; font-size: 24px;">UCAPAN TETAMU</h2>
-                    
-                    <!-- Kotak takungan ucapan automatik -->
-                    <div id="live-wishes-box" class="wishes-container">
-                        <p class="no-wishes">Sedang memuatkan ucapan indah...</p>
-                    </div>
-                </section>
-            </div>
-        </div>
-
     </div><!-- End Main Wrapper -->
 
-    <!-- ==========================================================================
-        SISTEM HALAMAN PENUH OVERLAY DASHBOARD (YANG TERTINGGAL TADI)
-        ========================================================================== -->
-
-    <!-- Halaman Penuh: HUBUNGI -->
+    <!-- HALAMAN OVERLAY: HUBUNGI -->
     <div id="page-contact" class="fullpage-overlay">
         <div class="fullpage-content-box">
             <button class="back-circle-button" onclick="dismissFullPage('page-contact')">&larr;</button>
@@ -1304,7 +1056,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         </div>
     </div>
 
-    <!-- Halaman Penuh: RSVP -->
+    <!-- HALAMAN OVERLAY: RSVP -->
     <div id="page-rsvp" class="fullpage-overlay">
         <div class="fullpage-content-box">
             <button class="back-circle-button" onclick="dismissFullPage('page-rsvp')">&larr;</button>
@@ -1316,9 +1068,7 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         </div>
     </div>
 
-    <!-- ==========================================================================
-        HALAMAN PENUH OVERLAY: WEDDING GIFT LIST (DYNAMIC WISH LIST)
-        ========================================================================== -->
+    <!-- HALAMAN OVERLAY: WEDDING GIFT LIST -->
     <div id="page-giftlist" class="fullpage-overlay">
         <div class="fullpage-content-box">
             <button class="back-circle-button" onclick="dismissFullPage('page-giftlist')">&larr;</button>
@@ -1330,16 +1080,14 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     We've put together a small gift list for your convenience. Please know that your presence is the greatest gift to us, and there is absolutely no obligation to purchase anything.
                 </div>
 
-                <!-- Kontainer skrol grid barangan yang akan dijana oleh JavaScript -->
                 <div class="gift-overlay-scroll">
                     <div id="dynamic-gift-grid" class="giftlist-grid-popup">
-                        <!-- Data barang akan masuk di sini secara automatik -->
+                        <!-- Data barang dijana JS -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SUB-MODAL: INTERFACE DETAIL HADIAH DENGAN BORANG INPUT NAMA -->
         <div id="gift-detail-modal" class="giftful-submodal">
             <div class="giftful-modal-content">
                 <button class="giftful-close-btn" onclick="closeGiftDetail()">&times;</button>
@@ -1352,7 +1100,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                     <h3 id="modal-gift-name">Product Name</h3>
                     <div class="giftful-variant-box" id="modal-gift-variant">Variant</div>
                     
-                    <!-- 📝 KOTAK FORM INPUT NAMA (Hanya muncul jika barang belum di-claim) -->
                     <div id="gift-claimer-form-block" style="margin-bottom: 15px;">
                         <p style="font-size: 11px; color: #aaa; margin-bottom: 5px; font-family: var(--font-sans);">Sila isi nama anda sebelum claim:</p>
                         <div style="display: flex; gap: 8px;">
@@ -1361,10 +1108,8 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                         </div>
                     </div>
 
-                    <!-- Butang Claim Interaktif -->
                     <button id="modal-claim-btn" class="giftful-claim-trigger" onclick="">+ Claim Hadiah</button>
                     
-                    <!-- Link Shopee/TikTok Shop -->
                     <a id="modal-shop-link" href="#" target="_blank" class="giftful-store-anchor">
                         <span id="modal-store-icon">🛍️</span> <span id="modal-store-url">s.shopee.com.my</span>
                         <span style="margin-left: auto;">↗</span>
@@ -1372,33 +1117,29 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-    <!-- SISTEM UTAMA LAGU LATAR -->
+    <!-- SISTEM LAGU LATAR -->
     <audio id="canva-bg-music" loop>
         <source src="Cinta Luar Biasa.mp3" type="audio/mpeg">
     </audio>
     <button id="music-floating-toggle" class="music-floating-toggle">🎵</button>
 
-    <!-- ENGIN JAVASCRIPT LOGIC -->
+    <!-- ENJIN JAVASCRIPT LOGIC -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
 
-        // 🚀 1. TAMPAL WEB APP URL KAU YANG DISALIN DARI GOOGLE APPS SCRIPT TADI
         const giftDatabaseUrl = "https://script.google.com/macros/s/AKfycbwmuEia-_UHbJVTcvTozYRlVZWDueAvnB4VOr01lP0EciJsJbZUJizJo9W1IoMMWw/exec";
 
-        // Data asas barangan Irfan
         let irfanGiftsData = [
             { id: 0, name: "Cookware Set", variant: "6pcs White Wood", image: "hadiah_cookware.png", store: "Shopee", link: "https://s.shopee.com.my/rCZfWQQjkekTwSfu9" },
             { id: 1, name: "Mugs Premium", variant: "Set of 6 Minimalist", image: "hadiah_mugs.png", store: "TikTok Shop", link: "https://vt.tiktok.com/ZMrXxxxxx/" },
             { id: 2, name: "Cutlery Set Gold", variant: "24 Pcs Stainless Steel", image: "hadiah_cutlery.png", store: "Shopee", link: "https://s.shopee.com.my/example2" },
-            { id: 3, name: "Dish Rack Black", variant: "2-Tier Anti-Rust Space Saver", image: "hadiah_dishrack.png", store: "Art Deco Shop", link: "https://www.artdeco.com.my" }
+            { id: 3, name: "Dish Rack Black", variant: "2-Tier Anti-Rust Space Saver", image: "hadiah_dishrack.png", store: "Shopee", link: "https://www.artdeco.com.my" }
         ];
 
-        // Map status claimed secara global
         let giftStatusMap = {};
 
-        // 2. FUNGSI AMBIL DATA: Baca status dari Google Sheets
         function fetchLiveGiftStatus() {
             fetch(giftDatabaseUrl)
                 .then(response => response.json())
@@ -1415,7 +1156,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
                 });
         }
 
-        // 3. RENDER GRID DI DALAM POP-UP UTAMA
         function renderGiftGrid() {
             const gridContainer = document.getElementById("dynamic-gift-grid");
             if (!gridContainer) return;
@@ -1442,7 +1182,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 4. BUKA SUB-MODAL DETAIL DENGAN SEKATAN HAK PEMBATALAN (LOCALSTORAGE LOCK)
         function openGiftDetail(id) {
             const gift = irfanGiftsData.find(g => g.id === id);
             if (!gift) return;
@@ -1494,12 +1233,10 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById("gift-detail-modal").style.display = "flex";
         }
 
-        // FUNGSI TUTUP SUB-MODAL
         function closeGiftDetail() {
             document.getElementById("gift-detail-modal").style.display = "none";
         }
 
-        // 5. ENJIN PUSH DATA FORM DATA (BERSIH & KALIS FREEZE)
         function toggleClaimGift(id, action) {
             let claimerFullName = "";
 
@@ -1562,22 +1299,37 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             }, 2000);
         }
 
-        // Paksa video background perlahan
-        window.addEventListener('DOMContentLoaded', () => {
-            const backgroundVideo = document.getElementById("html-bg-video");
-            if (backgroundVideo) {
-                backgroundVideo.playbackRate = 0.7; 
-            }
+        // 🚀 1. INSIALISASI AOS ANIMATION (KUNCI ONCE: FALSE UNTUK ANIMASI BERKALI-KALI MASUK/KELUAR)
+        AOS.init({ 
+            duration: 800, 
+            once: false,
+            mirror: true 
         });
 
-        // 1. Mengaktifkan Library AOS Animasi
-        AOS.init({ duration: 1000, once: true });
+        // 🚀 2. ENJIN DETEKSI SCROLL BIAR SEKSYEN KECIK BALIK BILA SCROLL ATAS
+        const allCleanSections = document.querySelectorAll('.section-clean');
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active'); // Mengecil/fade semula bila melepasi skrin
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: "-15% 0px -15% 0px", // Margin optimum untuk transisi masuk & keluar
+            threshold: 0.15
+        });
 
-        // 2. Fungsi Membuka & Menutup Halaman Panel Penuh
+        allCleanSections.forEach(section => {
+            scrollObserver.observe(section);
+        });
+
         function displayFullPage(pageId) {
             document.getElementById(pageId).style.display = "flex";
             if(pageId === 'page-giftlist') {
-                fetchLiveGiftStatus(); // Paksa sync data teranyar bila panel hadiah dibuka
+                fetchLiveGiftStatus();
             }
         }
 
@@ -1585,7 +1337,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             document.getElementById(pageId).style.display = "none";
         }
 
-        // 3. Formula Khas Hitung Masa Countdown
         const targetWeddingTimestamp = new Date("August 30, 2026 11:00:00").getTime();
 
         function runCanvaClock() {
@@ -1613,7 +1364,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
         }
         setInterval(runCanvaClock, 1000);
 
-        // 4. LOGIK ENGIN MUSIC BACKGROUND
         const musicTrack = document.getElementById("canva-bg-music");
         const musicControllerButton = document.getElementById("music-floating-toggle");
         const envelopeVid = document.getElementById("envelope-video");
@@ -1694,29 +1444,6 @@ CONVENTION CENTRE (PICC),<br>PRESINT 5, PUTRAJAYA</a>
             });
         }
 
-        // 5. ENJIN DETEKSI SKROL PANEL BUBBLE
-        const allFrames = document.querySelectorAll('.section-frame');
-        const observerOptions = {
-            root: null,
-            rootMargin: "-35% 0px -35% 0px", 
-            threshold: 0.1
-        };
-
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                } else {
-                    entry.target.classList.remove('active');
-                }
-            });
-        }, observerOptions);
-
-        allFrames.forEach(frame => {
-            scrollObserver.observe(frame);
-        });
-
-        // ENJIN TUGASAN UCAPAN GUESTBOOK LIVE CSV
         const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDtgBEv7XZCgxNpdZzkWxeAC57n-aZJWGJwgaS1mQdiAUlwIRYmR5YIAnIFsQS1fS7J_LpIKb-QJCz/pub?output=csv"; 
 
         async function fetchLiveWishes() {
