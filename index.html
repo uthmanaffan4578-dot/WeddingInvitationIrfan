@@ -132,12 +132,11 @@
             to { transform: scale(1.05); }
         }
 
-        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND IMEJ STATIK */
+        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND IMEJ BgImage2.jpg */
         .main-wrapper {
             width: 100%;
             max-width: 450px;
             background-color: var(--bg-cream);
-            /* ⚠️ Gantikan 'bgimage.png' dengan nama fail gambar background kau */
             background-image: url('BgImage2.jpg'); 
             background-size: cover;
             background-position: center;
@@ -189,13 +188,11 @@
             text-align: center;
             position: relative; 
             z-index: 2; 
-            /* Keadaan asas sebelum scroll masuk */
             transform: scale(0.85);
             opacity: 0.3;
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
         }
 
-        /* Bila masuk skrin, membesar & solid */
         .section-clean.active {
             transform: scale(1);
             opacity: 1;
@@ -325,21 +322,46 @@
             text-align: right;
         }
 
+        /* 🖼️ PROFILE FRAME PENGANTIN KEKAL BERGAYA */
         .profile-wooden-frame {
             width: 135px; 
             height: 135px;
+            background-color: transparent;
             position: relative;
             flex-shrink: 0;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: visible;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-wooden-frame::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('frame.png'); 
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .profile-wooden-frame:hover {
+            transform: scale(1.05);
         }
 
         .profile-wooden-frame img {
-            width: 85%;  
-            height: 85%; 
+            width: 70%;  
+            height: 80%; 
             object-fit: cover;
-            border-radius: 50%; 
+            border-radius: 0px; 
+            z-index: 1;  
+            position: relative;
         }
 
         .bismillah-img {
@@ -903,7 +925,6 @@
         </div>
 
         <!-- 🚀 DIVIDER GRAPHIC IMAGE 1 -->
-        <!-- ⚠️ Gantikan 'line_divider.png' dengan nama fail imej divider kau -->
         <img src="Divider.png" alt="Divider Line" class="section-divider-img">
 
         <!-- ================= FRAME 2: PARENTS & PHOTOS PAGE ================= -->
@@ -1299,26 +1320,26 @@
             }, 2000);
         }
 
-        // 🚀 1. INSIALISASI AOS ANIMATION (KUNCI ONCE: FALSE UNTUK ANIMASI BERKALI-KALI MASUK/KELUAR)
+        // 🚀 INSIALISASI AOS ANIMATION (REVERSIBLE EFEK SCROLL)
         AOS.init({ 
             duration: 800, 
             once: false,
             mirror: true 
         });
 
-        // 🚀 2. ENJIN DETEKSI SCROLL BIAR SEKSYEN KECIK BALIK BILA SCROLL ATAS
+        // 🚀 ENJIN DETEKSI SCROLL BIAR SEKSYEN KECIK BALIK BILA SCROLL ATAS
         const allCleanSections = document.querySelectorAll('.section-clean');
         const scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 } else {
-                    entry.target.classList.remove('active'); // Mengecil/fade semula bila melepasi skrin
+                    entry.target.classList.remove('active');
                 }
             });
         }, {
             root: null,
-            rootMargin: "-15% 0px -15% 0px", // Margin optimum untuk transisi masuk & keluar
+            rootMargin: "-15% 0px -15% 0px",
             threshold: 0.15
         });
 
