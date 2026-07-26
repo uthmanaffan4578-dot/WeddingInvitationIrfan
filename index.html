@@ -132,15 +132,11 @@
             to { transform: scale(1.05); }
         }
 
-        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND & OVERLAY PUTIH */
+        /* 🚀 MAIN WRAPPER BERSIH */
         .main-wrapper {
             width: 100%;
             max-width: 450px;
             background-color: var(--bg-cream);
-            background-image: url('BgImage2.jpg'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             min-height: 100vh;
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -148,30 +144,49 @@
             z-index: 1;
         }
 
-        /* 🤍 LAPISAN OVERLAY IMEJ PUTIH STATIK (DUDUK DIAM MASA SKROL) */
-        .main-wrapper::before {
+        /* 🖼️ LAPISAN 1: GAMBAR BACKGROUND UTAMA (STATIK & KUNCI SAIZ) */
+        .main-wrapper::after {
             content: '';
-            position: fixed; /* Paksa dia duduk diam kat skrin */
+            position: fixed;
             top: 0;
             left: 50%;
-            transform: translateX(-50%); /* Sentiasa tepat kat tengah macam wrapper */
+            transform: translateX(-50%);
             width: 100%;
-            max-width: 450px; /* Saiz tepat sama lebar dengan phone layout kau */
-            height: 100vh; /* Tutup seluruh tinggi skrin phone */
+            max-width: 450px;
+            height: 100%;
+            height: 100dvh; /* Paksa saiz kekal walaupun address bar phone keluar/masuk */
             
-            /* ⚠️ TUKAR 'NamaFileOverlayWhite.png' KEPADA NAMA FAIL SEBENAR KAU */
-            background-image: url('Cloud.png'); 
+            background-image: url('BgImage2.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             
-            /* 🎛️ TAHAP KEJELASAN OVERLAY (0.1 hingga 1.0) */
-            opacity: 0.85; 
-            
-            z-index: 0; /* Duduk kat belakang teks & kad */
+            z-index: -2; /* Duduk paling belakang sekali */
             pointer-events: none;
         }
 
+        /* 🤍 LAPISAN 2: OVERLAY IMEJ PUTIH (STATIK ATAS GAMBAR BG) */
+        .main-wrapper::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            height: 100dvh;
+            
+            background-image: url('Cloud.png'); /* Tukar nama fail overlay putih kau */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            opacity: 0.85; /* Ejas kejelasannya */
+            
+            z-index: -1; /* Duduk atas BgImage2.jpg, tapi belakang teks/divider */
+            pointer-events: none;
+        }
         /* STICKY BOTTOM NAVIGATION BAR */
         .bottom-navbar {
             position: fixed; 
