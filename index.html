@@ -148,25 +148,27 @@
             z-index: 1;
         }
 
-        /* 🤍 LAPISAN OVERLAY IMEJ PUTIH DI ATAS BG UTAMA */
+        /* 🤍 LAPISAN OVERLAY IMEJ PUTIH STATIK (DUDUK DIAM MASA SKROL) */
         .main-wrapper::before {
             content: '';
-            position: absolute;
+            position: fixed; /* Paksa dia duduk diam kat skrin */
             top: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%); /* Sentiasa tepat kat tengah macam wrapper */
             width: 100%;
-            height: 100%;
+            max-width: 450px; /* Saiz tepat sama lebar dengan phone layout kau */
+            height: 100vh; /* Tutup seluruh tinggi skrin phone */
             
-            /* ⚠️ TUKAR 'NamaFileOverlayWhite.png' KEPADA NAMA FAIL KAU NANTI */
+            /* ⚠️ TUKAR 'NamaFileOverlayWhite.png' KEPADA NAMA FAIL SEBENAR KAU */
             background-image: url('Cloud.png'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             
-            /* 🎛️ EJAS KEJELASAN OVERLAY PUTIH DEKAT SINI (0.1 hingga 1.0) */
-            opacity: 0.6; 
+            /* 🎛️ TAHAP KEJELASAN OVERLAY (0.1 hingga 1.0) */
+            opacity: 0.85; 
             
-            z-index: -1; /* Duduk di belakang teks, tapi di atas BgImage2.jpg */
+            z-index: 0; /* Duduk kat belakang teks & kad */
             pointer-events: none;
         }
 
