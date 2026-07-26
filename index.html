@@ -132,7 +132,7 @@
             to { transform: scale(1.05); }
         }
 
-        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND IMEJ BgImage2.jpg */
+        /* 🚀 MAIN WRAPPER DENGAN BACKGROUND & OVERLAY PUTIH */
         .main-wrapper {
             width: 100%;
             max-width: 450px;
@@ -145,6 +145,29 @@
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             padding: 25px 15px 80px 15px;
+            z-index: 1;
+        }
+
+        /* 🤍 LAPISAN OVERLAY IMEJ PUTIH DI ATAS BG UTAMA */
+        .main-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            /* ⚠️ TUKAR 'NamaFileOverlayWhite.png' KEPADA NAMA FAIL KAU NANTI */
+            background-image: url('Cloud.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* 🎛️ EJAS KEJELASAN OVERLAY PUTIH DEKAT SINI (0.1 hingga 1.0) */
+            opacity: 0.6; 
+            
+            z-index: -1; /* Duduk di belakang teks, tapi di atas BgImage2.jpg */
+            pointer-events: none;
         }
 
         /* STICKY BOTTOM NAVIGATION BAR */
