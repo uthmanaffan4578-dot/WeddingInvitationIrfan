@@ -172,19 +172,19 @@
             background-repeat: no-repeat;
         }
 
-        /* 🤍 OVERLAY IMEJ PUTIH STATIK (KALIS CROPPED) */
+        /* 🤍 OVERLAY IMEJ PUTIH STATIK (TARIK NGAM-NGAM BINGKAI) */
         .fixed-bg-overlay {
             position: absolute;
-            top: -50px; /* Nilai naik atas yang kau ejas tadi */
+            top: -30px; 
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 110%; /* Bagi tinggi extra sikit */
             background-image: url('Cloud.png'); 
             
-            /* 🚀 UBAH SINI: Paksa gambar muat 100% ikut lebar phone tanpa terpotong tepi */
-            background-size: 100% auto; 
+            /* 🚀 TARIK GAMBAR PENUH IKUT PETAK KANVAS (TAK KAN TERPOTONG TEPI) */
+            background-size: 100% 100%; 
             
-            background-position: top center; /* Rapatkan ke atas */
+            background-position: center;
             background-repeat: no-repeat;
             opacity: 0.85;
         }
